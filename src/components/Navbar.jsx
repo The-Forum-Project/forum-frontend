@@ -12,7 +12,7 @@ export default function Navbar() {
             <Link to={`/users/profile/${profileId}`}>Profile</Link>
             <Link to="/contactus">Contact Us</Link>
             <Link to="/users">Users</Link>
-            <Link to="/messages">Messages</Link>
+            <Link to="/messages">Messages Management</Link>
         </div>
     );
 }
