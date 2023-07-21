@@ -5,5 +5,9 @@ export default function HomePage() {
     const location = useLocation();
     console.log("HomePage render");
     console.log("HomePage location =", location);
-    return <div>HomePage</div>;
+    return (
+        <div>
+            <p>HomePage</p>
+        </div>
+    );
 }

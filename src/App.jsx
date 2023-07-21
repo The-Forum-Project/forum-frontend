@@ -10,12 +10,22 @@ import GuardRoute from "./components/GuardRoute";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
+import PostDetailPage from "./pages/PostDetailPage";
+import ContactAdminPage from "./pages/ContactAdminPage";
+import MMPage from "./pages/MMPage";
+import UMPage from "./pages/UMPage";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route element={<AppLayout />}>
             <Route element={<GuardRoute />}>
                 <Route path="/home" element={<HomePage />} />
+                <Route path="/users/profile/:userId" element={<ProfilePage />} />
+                <Route path="/posts/:postId" element={<PostDetailPage />} />
+                <Route path="/contactus" element={<ContactAdminPage />} />
+                <Route path="/messages" element={<MMPage />} />
+                <Route path="/users" element={<UMPage />} />
             </Route>
             <Route path="/users/register" element={<RegisterPage />} />
             <Route path="*" element={<LoginPage />} />

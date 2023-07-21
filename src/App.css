@@ -37,6 +37,37 @@
   }
 }
 
+/*Settings for Navbar*/
 .nav {
-   background-color: #61dafb;
- }
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 0.5rem 1rem; /* Increased horizontal padding for better spacing */
+  background-color: #fff;
+  color: black;
+  box-shadow: 0 2px 2px 2px rgba(9, 9, 9, 0.23);
+}
+
+.nav a {
+  margin-right: 10px;
+  text-decoration: none; /* Remove underline from links */
+  color: #333; /* Set link color to a preferred color */
+  font-size: 16px; /* Adjust font size as needed */
+  padding: 0.5rem 1rem; /* Add padding to make the links more clickable */
+  border-radius: 5px; /* Add rounded corners to the links */
+  transition: background-color 0.3s ease; /* Add a smooth transition on hover */
+}
+
+.nav a:hover {
+  background-color: #f2f2f2; /* Change background color on hover */
+  color: #555; /* Change text color on hover */
+}
+
+/* Optional: Add a style for the active link if you use react-router-dom */
+.nav a.active {
+  background-color: #555; /* Change background color for the active link */
+  color: #fff; /* Change text color for the active link */
+}
+

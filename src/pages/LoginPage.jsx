@@ -5,5 +5,9 @@ export default function LoginPage() {
     const location = useLocation();
     console.log("HomePage render");
     console.log("HomePage location =", location);
-    return <div>LoginPage</div>;
+    return (
+        <div>
+            <p>LoginPage</p>
+        </div>
+    );
 }
