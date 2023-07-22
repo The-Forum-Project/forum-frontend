@@ -4,18 +4,19 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function ProfilePage() {
     const params = useParams();
     const navigate = useNavigate();
+    let token = localStorage.getItem("token");
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
         // Fetch user data when the component mounts
         fetchUser(params.userId);
-    }, [params.userId]);
+    }, [params.userId, token]);
 
     const fetchUser = async (id) => {
         try {
             const response = await fetch(`http://localhost:9000/user-service/users/${id}`, {
                 headers: {
-                    'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJwZXJtaXNzaW9ucyI6W3siYXV0aG9yaXR5Ijoibm9ybWFsIn0seyJhdXRob3JpdHkiOiJhZG1pbiJ9XSwiaWQiOjJ9.A7t2VzXXt7eN_YkBss94yN1wDzYBR-0UryhjH2nOFNI'
+                    'Authorization' : `Bearer ${token}`
                 },
             });
             if (!response.ok) {
