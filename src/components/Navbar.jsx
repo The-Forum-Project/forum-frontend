@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-    const profileId = "3";
+    let profileId = localStorage.getItem("userId");
     console.log("Navbar render");
     return (
         <div className="nav">
