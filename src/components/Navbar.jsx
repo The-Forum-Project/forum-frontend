@@ -8,6 +8,7 @@ export default function Navbar() {
         <div className="nav">
             <Link to="/users/login">Login</Link>
             <Link to="/users/register">Register</Link>
+            {/*<Link to={`/posts/${postId}`}>Post Detail</Link>*/}
             <Link to="/home">Home</Link>
             <Link to={`/users/profile/${profileId}`}>Profile</Link>
             <Link to="/contactus">Contact Us</Link>
