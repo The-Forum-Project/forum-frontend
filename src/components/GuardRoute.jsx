@@ -4,5 +4,6 @@ import LoginPage from "../pages/LoginPage";
 
 
 export default function GuardRoute() {
-    return true ? <Outlet /> : <LoginPage />;
+    let token = localStorage.getItem("token");
+    return (token !== null) ? <Outlet /> : <LoginPage />;
 }

@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
 import GuardRoute from "./components/GuardRoute";
+import AdminGuardRoute from "./components/AdminGuardRoute"
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
@@ -23,9 +24,11 @@ const router = createBrowserRouter(
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/users/profile/:userId" element={<ProfilePage />} />
                 <Route path="/posts/:postId" element={<PostDetailPage />} />
+                <Route element={<AdminGuardRoute/>}>
+                    <Route path="/messages" element={<MMPage />} />
+                    <Route path="/users" element={<UMPage />} />
+                </Route>
                 <Route path="/contactus" element={<ContactAdminPage />} />
-                <Route path="/messages" element={<MMPage />} />
-                <Route path="/users" element={<UMPage />} />
             </Route>
             <Route path="/users/register" element={<RegisterPage />} />
             <Route path="*" element={<LoginPage />} />
