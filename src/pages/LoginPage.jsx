@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import jwt_decode from 'jwt-decode';
+import {useNavigate} from "react-router-dom";
 
 
 export default function LoginPage() {
-    // const location = useLocation();
+    const navigate = useNavigate();
     const [state, setState] = useState({
         inputs: { username: "", password: "" },
     });
@@ -42,11 +43,14 @@ export default function LoginPage() {
                     } else {
                         localStorage.setItem("authority", "banned")
                     }
-
                 }
+                alert("Login Successful");
+                navigate("/home", { state: { profileData: 2 } });
             } else {
                 // Handle error response here if needed
-                console.log('Login failed');
+                const data = await response.json();
+                console.log(data.message);
+                alert(data.message);
             }
         } catch (error) {
             // Handle any network or other errors here
@@ -67,19 +71,23 @@ export default function LoginPage() {
         <div>
             <p>LoginPage</p>
             <form onSubmit={handleSubmit}>
-                <input
+                <div>
+                    <input
                     type="text"
                     value={state.inputs.username}
                     onChange={handleChange("username")}
                     placeholder="username"
                 ></input>
-                <input
+                </div>
+                <div>
+                    <input
                     type="text"
                     value={state.inputs.password}
                     onChange={handleChange("password")}
                     placeholder="password"
                 ></input>
-                <button type="submit">Log In</button>
+                </div>
+                <div><button type="submit">Log In</button></div>
             </form>
         </div>
     );
