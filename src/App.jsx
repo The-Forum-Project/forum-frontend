@@ -28,8 +28,8 @@ const router = createBrowserRouter(
                     <Route path="/messages" element={<MMPage />} />
                     <Route path="/users" element={<UMPage />} />
                 </Route>
-                <Route path="/contactus" element={<ContactAdminPage />} />
             </Route>
+            <Route path="/contactus" element={<ContactAdminPage />} />
             <Route path="/users/register" element={<RegisterPage />} />
             <Route path="*" element={<LoginPage />} />
         </Route>
