@@ -30,6 +30,11 @@ export default function HomePage() {
     fetchPublishedPosts();
   }, []);
 
+  const viewDetail = (postId) => {
+    // Navigate to the detail page of the post with the given postId
+    window.location.href = `/posts/${postId}`;
+  };
+  
   return (
     <div>
       <h1>HomePage</h1>
@@ -50,7 +55,7 @@ export default function HomePage() {
               <td>{post.userId}</td>
               <td>{post.dateCreated}</td>
               <td>{post.title}</td>
-              {/* Add more table data cells for other post properties */}
+              <button onClick={() => viewDetail(post.postId)}>View Details</button>
             </tr>
           ))}
         </tbody>

@@ -10,7 +10,9 @@ export default function PostDetailPage() {
     //const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJwZXJtaXNzaW9ucyI6W3siYXV0aG9yaXR5IjoiYWRtaW4ifSx7ImF1dGhvcml0eSI6ImVtYWlsIn0seyJhdXRob3JpdHkiOiJub3JtYWwifV0sImlkIjoxfQ.ZjzOLf1NR-WF2AUj8AtzZejgc3ven8PwzFbg5OwZBOQ';
      const token = localStorage.getItem('token');
     // console.log({postId});
+    // const userIds = localStorage.getItem('userId');
     const fetchUsers = async (userIds, token) => {
+        console.log("userId", userIds);
         const userPromises = Array.from(userIds).map(userId =>
             fetch(`http://localhost:9000/user-service/users/${userId}`, {
                 method: 'GET',
