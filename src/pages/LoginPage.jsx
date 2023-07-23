@@ -67,6 +67,8 @@ export default function LoginPage() {
         }));
     };
 
+    const isFormEmpty = !state.inputs.username || !state.inputs.password;
+
     return (
         <div>
             <p>LoginPage</p>
@@ -87,7 +89,7 @@ export default function LoginPage() {
                     placeholder="password"
                 ></input>
                 </div>
-                <div><button type="submit">Log In</button></div>
+                <div><button type="submit" disabled={isFormEmpty}>Log In</button></div>
             </form>
         </div>
     );

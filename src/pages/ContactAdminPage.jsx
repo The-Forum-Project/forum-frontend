@@ -38,8 +38,8 @@ export default function ContactAdminPage() {
     };
     const isFormEmpty = !subject || !email || !message;
 
-    console.log("HomePage render");
-    console.log("HomePage location =", location);
+    console.log("Contact Admin render");
+    console.log("ContactAdminPage location =", location);
     return (
         <div>
             <h1>Contact Us</h1>
