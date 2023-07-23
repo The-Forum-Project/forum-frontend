@@ -15,12 +15,14 @@ export default function Navbar() {
     return (
         <div className="nav">
             {!token && (
-                <Link to="/users/login">Login</Link>
+                <>
+                    <Link to="/users/login">Login</Link>
+                    <Link to="/users/register">Register</Link>
+                </>
             )}
             {token && (
                 <Link to="/users/login" onClick={clearLocalStorage}>Logout</Link>
             )}
-            <Link to="/users/register">Register</Link>
             {token && (
                 <>
                     <Link to="/home">Home</Link>
