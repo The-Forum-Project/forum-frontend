@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function VerifyUserPage() {
     let token = localStorage.getItem("token");
@@ -15,6 +16,22 @@ export default function VerifyUserPage() {
     const handleInputChange = (event) => {
         setVerificationCode(event.target.value);
     };
+
+    useEffect(() => {
+        const postUrl = 'http://localhost:9000/user-service/users/verify/email?routingKey=apple';
+        fetch(postUrl, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer '+ token
+            }
+        }).then((response) => response.json())
+            .then(async (data) => {
+                console.log(data.message);
+                alert(data.message);
+            })
+            .catch((error) => console.error("Error:", error));
+    }, []);
 
     const verifyUser = async () => {
         try {
@@ -34,7 +51,7 @@ export default function VerifyUserPage() {
                 clearLocalStorage();
                 navigate("/users/login");
             } else {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                alert(data.message);
             }
         } catch (error) {
             console.error('Error verifying user:', error);
