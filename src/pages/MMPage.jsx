@@ -4,8 +4,11 @@ import { useLocation } from "react-router-dom";
 export default function MMPage() {
     const location = useLocation();
     const [messages, setMessages] = useState([]);
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJwZXJtaXNzaW9ucyI6W3siYXV0aG9yaXR5IjoiYWRtaW4ifSx7ImF1dGhvcml0eSI6ImVtYWlsIn0seyJhdXRob3JpdHkiOiJub3JtYWwifV0sImlkIjoxfQ.ZjzOLf1NR-WF2AUj8AtzZejgc3ven8PwzFbg5OwZBOQ';
-    // const token = localStorage.getItem('token');
+    const [loading, setLoading] = useState(true);
+    //const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJwZXJtaXNzaW9ucyI6W3siYXV0aG9yaXR5IjoiYWRtaW4ifSx7ImF1dGhvcml0eSI6ImVtYWlsIn0seyJhdXRob3JpdHkiOiJub3JtYWwifV0sImlkIjoxfQ.ZjzOLf1NR-WF2AUj8AtzZejgc3ven8PwzFbg5OwZBOQ';
+     const token = localStorage.getItem('token');
+    const profileId = localStorage.getItem("userId");
+    const authority = localStorage.getItem("authority");
     console.log("HomePage render");
     console.log("HomePage location =", location);
 
@@ -23,6 +26,7 @@ export default function MMPage() {
             .then(response => response.json())
             .then(data => {
                 setMessages(data.messages);
+                setLoading(false);
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -60,37 +64,46 @@ export default function MMPage() {
         }
     };
 
+    if (loading) {
+        return <div>Loading...</div>;
+    } else {
+        if (authority === "admin" || authority === "super") {
+            return (
+                <div style={{ maxWidth: "800px", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                        <thead>
+                        <tr style={{ backgroundColor: "#f5f5f5", textAlign: "left" }}>
+                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date</th>
+                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Subject</th>
+                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email Address</th>
+                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Message</th>
+                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Status</th>
+                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {messages.map(message => (
+                            <tr key={message.messageId} style={{ borderBottom: "1px solid #ddd" }}>
+                                <td style={{ padding: "10px" }}>{new Date(message.dateCreated).toLocaleString()}</td>
+                                <td style={{ padding: "10px" }}>{message.subject}</td>
+                                <td style={{ padding: "10px" }}>{message.email}</td>
+                                <td style={{ padding: "10px" }}>{message.message}</td>
+                                <td style={{ padding: "10px" }}>{message.status === 0 ? 'Open' : 'Closed'}</td>
+                                <td style={{ padding: "10px" }}>
+                                    <button onClick={() => handleStatusChange(message.messageId, message.status)} style={{ padding: "5px 10px", borderRadius: "5px", cursor: "pointer", border: "none", backgroundColor: message.status === 0 ? "#ff0000" : "#007BFF", color: "white" }}>
+                                        {message.status === 0 ? 'Close' : 'Open'}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
 
-    return (
-       <div>
-           <table>
-               <thead>
-               <tr>
-                   <th>Date</th>
-                   <th>Subject</th>
-                   <th>Email Address</th>
-                   <th>Message</th>
-                   <th>Status</th>
-                   <th>Actions</th>
-               </tr>
-               </thead>
-               <tbody>
-               {messages.map(message => (
-                   <tr key={message.messageId}>
-                       <td>{new Date(message.dateCreated).toLocaleString()}</td>
-                       <td>{message.subject}</td>
-                       <td>{message.email}</td>
-                       <td>{message.message}</td>
-                       <td>{message.status === 0 ? 'Open' : 'Closed'}</td>
-                       <td>
-                           <button onClick={() => handleStatusChange(message.messageId, message.status)}>
-                               {message.status === 0 ? 'Close' : 'Open'}
-                           </button>
-                       </td>
-                   </tr>
-               ))}
-               </tbody>
-           </table>
-       </div>
-    );
+            );
+        } else {
+            return (<div>You do not have authority.</div>);
+        }
+    }
+
 }
