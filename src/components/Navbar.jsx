@@ -29,6 +29,9 @@ export default function Navbar() {
                     <Link to={`/users/profile/${profileId}`}>Profile</Link>
                 </>
             )}
+            {token && authority === 'unverified' && (
+                    <Link to="/users/verify">Please Verify Your Email</Link>
+            )}
             {(authority === 'admin' || authority === 'super') && (
                 <>
                     <Link to="/users">Users</Link>
