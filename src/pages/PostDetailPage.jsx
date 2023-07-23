@@ -7,6 +7,8 @@ export default function PostDetailPage() {
     const [post, setPost] = useState();
     const [users, setUsers] = useState({});
     const { postId } = useParams();
+    const [replyContent, setReplyContent] = useState("");
+    const [subReplies, setSubReplies] = useState([]);
     //const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJwZXJtaXNzaW9ucyI6W3siYXV0aG9yaXR5IjoiYWRtaW4ifSx7ImF1dGhvcml0eSI6ImVtYWlsIn0seyJhdXRob3JpdHkiOiJub3JtYWwifV0sImlkIjoxfQ.ZjzOLf1NR-WF2AUj8AtzZejgc3ven8PwzFbg5OwZBOQ';
      const token = localStorage.getItem('token');
     // console.log({postId});
@@ -31,6 +33,33 @@ export default function PostDetailPage() {
         return userMap;
     };
 
+    const handleReplySubmit = async (e) => {
+        e.preventDefault();
+        try {
+          const replyData = { comment: replyContent };
+          const response = await fetch(
+            `http://localhost:9000/post-reply-service/${postId}/replies`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(replyData),
+            }
+          );
+    
+          if (response.ok) {
+            // Refresh the page after successful reply submission to see the new reply
+            window.location.reload();
+          } else {
+            console.error("Error creating new reply:", response);
+          }
+        } catch (error) {
+          console.error("Error creating new reply:", error);
+        }
+      };
+
     useEffect(() => {
         const postUrl = `http://localhost:9000/post-reply-service/post/${postId}`;
         fetch(postUrl, {
@@ -53,6 +82,39 @@ export default function PostDetailPage() {
             .catch((error) => console.error("Error:", error));
     }, [postId]);
 
+    const handleSubReplySubmit = async (e, replyIndex) => {
+        e.preventDefault();
+        try {
+          const subReplyData = { comment: subReplies[replyIndex] };
+          const response = await fetch(
+            `http://localhost:9000/post-reply-service/${postId}/replies/${replyIndex}/subreplies`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(subReplyData),
+            }
+          );
+    
+          if (response.ok) {
+            window.location.reload();
+          } else {
+            console.error("Error updating subreply:", response);
+          }
+        } catch (error) {
+          console.error("Error updating subreply:", error);
+        }
+      };
+    
+
+    const handleSubReplyChange = (index, value) => {
+        const newSubReplies = [...subReplies];
+        newSubReplies[index] = value;
+        setSubReplies(newSubReplies);
+    };
+      
     const redirectHome = () => {
         // navigate("/");
         // navigate(-1); // based on history stack
@@ -81,13 +143,39 @@ export default function PostDetailPage() {
                                 <img src={image} alt="attachment's image" style={{ width: '100%', maxHeight: '500px' }} />
                             </div>
                         ))}
+
+                        {/* Add reply form here */}
+                        <form onSubmit={handleReplySubmit}>
+                            <textarea
+                            value={replyContent}
+                            onChange={(e) => setReplyContent(e.target.value)}
+                            placeholder="Write your reply..."
+                            rows="4"
+                            style={{ width: "100%", resize: "none", marginBottom: "10px" }}
+                            ></textarea>
+                            <button type="submit">Submit Reply</button>
+                        </form>
+                        
+                        {/* show replies here */}
                         <div style={{ marginTop: "20px" }}>Replies:
-                            {post.postReplies ? (post.postReplies.map((reply) => (
+                            {post.postReplies ? (post.postReplies.map((reply, index) => (
                                 <div key={reply.id} style={{ display: "flex", alignItems: "flex-start", marginTop: "15px", marginLeft: "10px" }}>
                                     <img src={users[reply.userId].imageURL} alt={users[reply.userId].firstName} style={{ borderRadius: "50%", marginRight: "10px", width: '30px', height: '30px' }}/>
                                     <div>
                                         <h4>{users[reply.userId].firstName} {users[reply.userId].lastName}</h4>
                                         <p>{reply.comment}</p>
+
+                                        <form onSubmit={(e) => handleSubReplySubmit(e, index)}>
+                                        <textarea
+                                            value={subReplies[index] || ""}
+                                            onChange={(e) => handleSubReplyChange(index, e.target.value)}
+                                            placeholder="Write your subreply..."
+                                            rows="3"
+                                            style={{ width: "100%", resize: "none", marginBottom: "10px" }}
+                                        ></textarea>
+                                        <button type="submit">Submit Subreply</button>
+                                        </form>
+
                                         {reply.subReplies.map((subReply) => (
                                             <div key={subReply.id} style={{ display: "flex", alignItems: "flex-start", marginLeft: "20px", marginTop: "10px" }}>
                                                 <img src={users[subReply.userId].imageURL} alt={users[subReply.userId].firstName} style={{ borderRadius: "50%", marginRight: "10px", width: '30px', height: '30px' }}/>
