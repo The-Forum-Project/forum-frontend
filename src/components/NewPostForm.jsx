@@ -48,16 +48,10 @@ export default function NewPostForm() {
         });
         
         alert("Create a new post!");
-        resetForm();
+        window.location.reload();
     } catch (error) {
       console.error("Error creating new post:", error);
     }
-  };
-  const resetForm = () => {
-    setTitle("");
-    setContent("");
-    setImages([]);
-    setAttachments([]);
   };
 
   return (
