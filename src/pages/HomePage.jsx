@@ -121,36 +121,6 @@ export default function HomePage() {
             </table>
             )}
         </div>
-
-        <div> 
-            <h2>Drafts</h2>
-            {userDrafts.length === 0 ? (
-                <p>You have no drafts</p>
-            ) : (
-            <table>
-                <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Date</th>
-                    <th>Title</th>
-                    {/* Add more table headers as needed */}
-                </tr>
-                </thead>
-                <tbody>
-                {userDrafts.map((post) => (
-                    <tr key={post.postId}>
-                    <td style={{ padding: "8px" }}>{post.userId}</td>
-                    <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
-                    <td style={{ padding: "8px" }}>{post.title}</td>
-                    <td style={{ padding: "8px" }}>
-                        <button style={{ padding: "3px" }} onClick={() => modifyPost(post.postId, post.status)}>Continue edit</button>
-                    </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            )}
-        </div>
       </div>
 
       {showModifyForm && (
