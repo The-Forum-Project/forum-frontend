@@ -12,6 +12,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
+import UpdateUserPage from "./pages/UpdateUserPage";
 import PostDetailPage from "./pages/PostDetailPage";
 import ContactAdminPage from "./pages/ContactAdminPage";
 import VerifyEmailPage from './pages/VerifyEmailPage';
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/users/profile/:userId" element={<ProfilePage />} />
                 <Route path="/posts/:postId" element={<PostDetailPage />} />
+                <Route path="/users/update/:userId" element={<UpdateUserPage />} />
                 <Route path="/users/verify" element={<VerifyEmailPage />} />
                 <Route element={<AdminGuardRoute/>}>
                     <Route path="/messages" element={<MMPage />} />
