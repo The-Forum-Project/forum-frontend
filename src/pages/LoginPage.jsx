@@ -71,26 +71,44 @@ export default function LoginPage() {
 
     return (
         <div>
-            <p>LoginPage</p>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <h1 style={{ textAlign: "center", color: "#444" }}>Login Page</h1>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{ marginBottom: "10px" }}>
                     <input
-                    type="text"
-                    value={state.inputs.username}
-                    onChange={handleChange("username")}
-                    placeholder="username"
-                ></input>
+                        type="text"
+                        value={state.inputs.username}
+                        onChange={handleChange("username")}
+                        placeholder="Username"
+                        style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "300px" }}
+                    />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                    <input
+                        type="password"
+                        value={state.inputs.password}
+                        onChange={handleChange("password")}
+                        placeholder="Password"
+                        style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "300px" }}
+                    />
                 </div>
                 <div>
-                    <input
-                    type="text"
-                    value={state.inputs.password}
-                    onChange={handleChange("password")}
-                    placeholder="password"
-                ></input>
+                    <button
+                        type="submit"
+                        disabled={isFormEmpty}
+                        style={{
+                            padding: "10px 20px",
+                            backgroundColor: isFormEmpty ? "#ccc" : "#007BFF",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: isFormEmpty ? "default" : "pointer",
+                        }}
+                    >
+                        Log In
+                    </button>
                 </div>
-                <div><button type="submit" disabled={isFormEmpty}>Log In</button></div>
             </form>
+
         </div>
     );
 }

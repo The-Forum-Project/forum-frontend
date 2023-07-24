@@ -57,42 +57,62 @@ export default function RegisterPage() {
     const isFormEmpty = !state.inputs.username || !state.inputs.password || !state.inputs.firstname || !state.inputs.lastname;
     return (
         <div>
-            <p>SignUp Page</p>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <h1 style={{ textAlign: "center", color: "#444" }}>SignUp Page</h1>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{ marginBottom: "10px" }}>
                     <input
                         type="text"
                         value={state.inputs.username}
                         onChange={handleChange("username")}
-                        placeholder="email"
-                    ></input>
+                        placeholder="Email"
+                        style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "300px" }}
+                    />
                 </div>
-                <div>
+                <div style={{ marginBottom: "10px" }}>
                     <input
-                        type="text"
+                        type="password"
                         value={state.inputs.password}
                         onChange={handleChange("password")}
-                        placeholder="password"
-                    ></input>
+                        placeholder="Password"
+                        style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "300px" }}
+                    />
                 </div>
-                <div>
+                <div style={{ marginBottom: "10px" }}>
                     <input
                         type="text"
                         value={state.inputs.firstname}
                         onChange={handleChange("firstname")}
-                        placeholder="firstname"
-                    ></input>
+                        placeholder="First Name"
+                        style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "300px" }}
+                    />
                 </div>
-                <div>
+                <div style={{ marginBottom: "10px" }}>
                     <input
                         type="text"
                         value={state.inputs.lastname}
                         onChange={handleChange("lastname")}
-                        placeholder="lastname"
-                    ></input>
+                        placeholder="Last Name"
+                        style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "300px" }}
+                    />
                 </div>
-                <div><button type="submit" disabled={isFormEmpty}>Sign Up</button></div>
+                <div>
+                    <button
+                        type="submit"
+                        disabled={isFormEmpty}
+                        style={{
+                            padding: "10px 20px",
+                            backgroundColor: isFormEmpty ? "#ccc" : "#007BFF", // Set background color based on the form state
+                            color: "white",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: isFormEmpty ? "default" : "pointer", // Set cursor based on the form state
+                        }}
+                    >
+                        Sign Up
+                    </button>
+                </div>
             </form>
+
         </div>
     );
 }
