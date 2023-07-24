@@ -23,12 +23,13 @@ export default function NewPostForm() {
     setAttachments(Array.from(e.target.files));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, status) => {
     e.preventDefault();
     // Prepare the data to be sent as a form body
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
+    formData.append("status", status);
     images.forEach((image) => formData.append("images", image));
     attachments.forEach((attachment) => formData.append("attachments", attachment));
 
@@ -52,27 +53,37 @@ export default function NewPostForm() {
     } catch (error) {
       console.error("Error creating new post:", error);
     }
-  };
+  }; 
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Title:</label>
-        <input type="text" value={title} onChange={handleTitleChange} placeholder="Title" />
+    <form style={{ maxWidth: "600px", margin: "0 auto" }}>
+      <div style={{ marginBottom: "10px" }}>
+        <label htmlFor="title">Title:</label>
+        <input style={{ width: "100%", boxSizing: "border-box" }} type="text" id="title" value={title} onChange={handleTitleChange} placeholder="Title" />
       </div>
-      <div>
-        <label>Content:</label>
-        <textarea value={content} onChange={handleContentChange} placeholder="Content" />
+      <div style={{ marginBottom: "10px" }}>
+        <label htmlFor="content">Content:</label>
+        <textarea
+          id="content"
+          value={content}
+          onChange={handleContentChange}
+          placeholder="Content"
+          rows="5"
+          style={{ width: "100%", boxSizing: "border-box" }} // Set width to 100% and box-sizing to border-box
+        />
       </div>
-      <div>
-        <label>Images:</label>
-        <input type="file" onChange={handleImageChange} multiple />
+      <div style={{ marginBottom: "10px", display: "flex", alignItems: "center" }}>
+        <label htmlFor="images">Images:</label>
+        <input style={{marginLeft: "10px"}} type="file" id="images" onChange={handleImageChange} multiple />
       </div>
-      <div>
-        <label>Attachments:</label>
-        <input type="file" onChange={handleAttachmentChange} multiple />
+      <div style={{ marginBottom: "20px", display: "flex", alignItems: "center"  }}>
+        <label htmlFor="attachments">Attachments:</label>
+        <input style={{marginLeft: "10px"}} type="file" id="attachments" onChange={handleAttachmentChange} multiple />
       </div>
-      <button type="submit">Publish</button>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <button onClick={(e) => handleSubmit(e, "published")} >Publish</button>
+        <button onClick={(e) => handleSubmit(e, "unpublished")} style={{ marginLeft:"45px" }}>Save as a draft</button>
+      </div>
     </form>
   );
 }

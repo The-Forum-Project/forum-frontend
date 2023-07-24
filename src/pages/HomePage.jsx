@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NewPostForm from "../components/NewPostForm";
+import ModifyPostForm from "../components/PostEditingForm";
 
 export default function HomePage() {
   const [publishedPosts, setPublishedPosts] = useState([]);
+  const [userPosts, setUserPosts] = useState([]);
+  const [userDrafts, setUserDrafts] = useState([]);
+  const [showModifyForm, setShowModifyForm] = useState(false);
+  const [postId, setPostId] = useState("");
+  const [postStatus, setPostStatus] = useState("");
 
   useEffect(() => {
-    async function fetchPublishedPosts() {
+    async function fetchPosts() {
       try {
             const token = localStorage.getItem("token");
         if (!token) {
@@ -20,14 +26,23 @@ export default function HomePage() {
         const response = await axios.get(
           "http://localhost:9000/post-reply-service/posts", {headers}
         );
-        const posts = response.data.posts;
-        setPublishedPosts(posts);
+        setPublishedPosts(response.data.posts);
+
+        const userPosts = await axios.get(
+            `http://localhost:9000/post-reply-service/posts/${localStorage.userId}`, {headers}
+        ); 
+        setUserPosts(userPosts.data.posts);
+
+        const drafts = await axios.get(
+            `http://localhost:9000/post-reply-service/posts/${localStorage.userId}/drafts`, {headers}
+        );
+        setUserDrafts(drafts.data.posts);
       } catch (error) {
         console.error("Error fetching published posts:", error);
       }
     }
 
-    fetchPublishedPosts();
+    fetchPosts();
   }, []);
 
   const viewDetail = (postId) => {
@@ -35,34 +50,121 @@ export default function HomePage() {
     window.location.href = `/posts/${postId}`;
   };
   
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); // Change the format as needed
+  };
+
+  const modifyPost = (postId, status) => {
+    setPostId(postId);
+    setPostStatus(status);
+    setShowModifyForm(true);
+  };
+
   return (
-    <div>
-      <h1>HomePage</h1>
-
-      <h2>Published Posts</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Date</th>
-            <th>Title</th>
-            {/* Add more table headers as needed */}
-          </tr>
-        </thead>
-        <tbody>
-          {publishedPosts.map((post) => (
-            <tr key={post.postId}>
-              <td>{post.userId}</td>
-              <td>{post.dateCreated}</td>
-              <td>{post.title}</td>
-              <button onClick={() => viewDetail(post.postId)}>View Details</button>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", marginTop:"-0px" }}>
+      <div style={{ display: "flex", flexDirection: "row"}}>
+      <div style={{marginRight : "100px"}}>
+        <h2>Published Posts</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>Date</th>
+                <th>Title</th>
+                {/* Add more table headers as needed */}
             </tr>
-          ))}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+            {publishedPosts.map((post) => (
+                <tr key={post.postId}>
+                <td style={{ padding: "8px" }}>{post.userId}</td>
+                <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
+                <td style={{ padding: "8px" }}>{post.title}</td>
+                <td style={{ padding: "8px" }}>
+                    <button style={{ padding: "3px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
+                </td> 
+                </tr>
+            ))}
+            </tbody>
+        </table>
+      </div>
 
-      <h2>Create New Post</h2>
-      <NewPostForm />
+      <div>
+        <div> 
+            <h2>My Posts</h2>
+            {userPosts.length === 0 ? (
+                <p>You have no posts</p>
+            ) : (
+            <table>
+                <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {userPosts.map((post) => (
+                    <tr key={post.postId}>
+                    <td style={{ padding: "8px" }}>{post.userId}</td>
+                    <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
+                    <td style={{ padding: "8px" }}>{post.title}</td>
+                    <td style={{ padding: "8px" }}>{post.status}</td> 
+                    <td style={{ padding: "8px" }}>
+                        <button style={{ padding: "3px" }} onClick={() => modifyPost(post.postId, post.status)}>Modify this post</button>
+                    </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+            )}
+        </div>
+
+        <div> 
+            <h2>Drafts</h2>
+            {userDrafts.length === 0 ? (
+                <p>You have no drafts</p>
+            ) : (
+            <table>
+                <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Title</th>
+                    {/* Add more table headers as needed */}
+                </tr>
+                </thead>
+                <tbody>
+                {userDrafts.map((post) => (
+                    <tr key={post.postId}>
+                    <td style={{ padding: "8px" }}>{post.userId}</td>
+                    <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
+                    <td style={{ padding: "8px" }}>{post.title}</td>
+                    <td style={{ padding: "8px" }}>
+                        <button style={{ padding: "3px" }} onClick={() => modifyPost(post.postId, post.status)}>Continue edit</button>
+                    </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+            )}
+        </div>
+      </div>
+
+      {showModifyForm && (
+        <ModifyPostForm
+          postId={postId}
+          postStatus={postStatus}
+          onClose={() => setShowModifyForm(false)} // Function to close the form when canceled
+        />
+      )}
+
+      </div>
+      <div style={{marginTop:"50px", marginBottom:"30px"}}>
+        <NewPostForm />
+      </div>
     </div>
   );
 }
