@@ -2,40 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 /*Settings for Navbar*/
 .nav {
@@ -71,6 +37,27 @@
   color: #006400; /* Change text color on hover to blue */
   font-weight: bold; /* Add font weight to make the link more prominent on hover */
 }
+
+/* Add the keyframes for the glitter effect */
+@keyframes glitter {
+  0% {
+    color: #ffc107; /* Initial color (change to your desired color) */
+  }
+  50% {
+    color: #f00; /* Mid-animation color (change to your desired color) */
+  }
+  100% {
+    color: #ffc107; /* Final color (same as initial color) */
+  }
+}
+
+/* Apply the animation to the "glitter" class */
+.glitter {
+  animation: glitter 2s infinite; /* Adjust the animation duration as needed */
+}
+
+
+
 
 
 

@@ -30,7 +30,9 @@ export default function Navbar() {
                 </>
             )}
             {token && authority === 'unverified' && (
-                    <Link to="/users/verify">Please Verify Your Email</Link>
+                <Link to="/users/verify" className="glitter">
+                    Please Verify Your Email
+                </Link>
             )}
             {(authority === 'admin' || authority === 'super') && (
                 <>
