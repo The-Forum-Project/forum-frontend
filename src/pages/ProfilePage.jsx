@@ -33,6 +33,11 @@ export default function ProfilePage() {
         navigate("/home", { state: { profileData: 2 } });
     };
 
+    const updateUser = () => {
+        console.log(params.userId);
+        navigate(`/users/update/${params.userId}`);
+    };
+
     return (
         <div>
             {userData ? (
@@ -45,6 +50,7 @@ export default function ProfilePage() {
                 <p>Loading...</p>
             )}
             <button onClick={redirectHome}>Return to Home</button>
+            <button onClick={updateUser}>Update User</button>
         </div>
     );
 }
