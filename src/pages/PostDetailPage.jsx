@@ -80,6 +80,23 @@ export default function PostDetailPage() {
                 setLoading(false);
             })
             .catch((error) => console.error("Error:", error));
+
+        const history = {
+            postId: postId
+        }
+        /*set view history */
+        fetch("http://localhost:9000/history-service/histories", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer '+ token
+            },
+            body: JSON.stringify(history) 
+        })
+        .then((response) => {
+            console.log(response.json());
+        })
+        .catch((error) => console.error("Error:", error));
     }, [postId]);
 
     const handleSubReplySubmit = async (e, replyIndex) => {
