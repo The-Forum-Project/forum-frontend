@@ -64,6 +64,24 @@ export default function UMPage() {
         }
     };
 
+    const promoteUser = async (id) => {
+        const response = await fetch(`http://localhost:9000/user-service/users/${id}/promote`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer '+ token
+            }
+        });
+
+        if (response.ok) {
+            alert('User status updated successfully!');
+            window.location.reload();
+        } else {
+            console.log(response);
+            alert('Failed to update user status.');
+        }
+    };
+
 
     if (loading) {
         return <div>Loading...</div>;
@@ -73,13 +91,16 @@ export default function UMPage() {
                 <div style={{ maxWidth: "800px", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
                     <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <thead>
-                        <tr style={{ backgroundColor: "#f5f5f5", textAlign: "left" }}>
+                        <tr style={{ backgroundColor: "#f5f5f5", textAlign: "center" }}>
                             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>User Id</th>
                             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Full Name</th>
                             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email</th>
                             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date Joined</th>
                             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Type</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Actions</th>
+                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Activation</th>
+                            {authority === "super" && (
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Promotion</th>
+                            )}
                         </tr>
                         </thead>
                         <tbody>
@@ -91,9 +112,38 @@ export default function UMPage() {
                                 <td style={{ padding: "10px" }}>{new Date(user.registrationDate).toLocaleString()}</td>
                                 <td style={{ padding: "10px" }}>{typeName(user.type)}</td>
                                 <td style={{ padding: "10px" }}>
-                                    <button onClick={() => handleActiveStatusChange(user.userId, user.active)} style={{ padding: "5px 10px", borderRadius: "5px", cursor: "pointer", border: "none", backgroundColor: user.active ? "#ff0000" : "#007BFF", color: "white" }}>
-                                        {user.active ? 'BAN' : 'ACTIVATE'}
-                                    </button>
+                                    {user.type !== 0 && user.type !== 1 && (
+                                        <button
+                                            onClick={() => handleActiveStatusChange(user.userId, user.active)}
+                                            style={{
+                                                padding: "5px 10px",
+                                                borderRadius: "5px",
+                                                cursor: "pointer",
+                                                border: "none",
+                                                backgroundColor: user.active ? "#ff0000" : "#007BFF",
+                                                color: "white"
+                                            }}
+                                        >
+                                            {user.active ? 'BAN' : 'ACTIVATE'}
+                                        </button>
+                                    )}
+                                </td>
+                                <td style={{ padding: "10px" }}>
+                                    {user.type === 2 && authority === 'super' && (
+                                        <button
+                                            onClick={() => promoteUser(user.userId)}
+                                            style={{
+                                                padding: "5px 10px",
+                                                borderRadius: "5px",
+                                                cursor: "pointer",
+                                                border: "none",
+                                                backgroundColor:"#007BFF",
+                                                color: "white"
+                                            }}
+                                        >
+                                            PROMOTE
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}

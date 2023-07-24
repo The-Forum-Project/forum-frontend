@@ -70,7 +70,7 @@ export default function MMPage() {
                 <div style={{ maxWidth: "800px", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
                     <table style={{ width: "100%", borderCollapse: "collapse" }}>
                         <thead>
-                        <tr style={{ backgroundColor: "#f5f5f5", textAlign: "left" }}>
+                        <tr style={{ backgroundColor: "#f5f5f5", textAlign: "center" }}>
                             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date</th>
                             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Subject</th>
                             <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email Address</th>
