@@ -30,7 +30,7 @@ export default function ProfilePage() {
     };
 
     const redirectHome = () => {
-        navigate("/home", { state: { profileData: 2 } });
+        navigate("/home");
     };
 
     const updateUser = () => {
