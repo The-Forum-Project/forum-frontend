@@ -5,12 +5,10 @@ export default function MMPage() {
     const location = useLocation();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
-    //const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20iLCJwZXJtaXNzaW9ucyI6W3siYXV0aG9yaXR5IjoiYWRtaW4ifSx7ImF1dGhvcml0eSI6ImVtYWlsIn0seyJhdXRob3JpdHkiOiJub3JtYWwifV0sImlkIjoxfQ.ZjzOLf1NR-WF2AUj8AtzZejgc3ven8PwzFbg5OwZBOQ';
-     const token = localStorage.getItem('token');
-    const profileId = localStorage.getItem("userId");
+    const token = localStorage.getItem('token');
     const authority = localStorage.getItem("authority");
-    console.log("HomePage render");
-    console.log("HomePage location =", location);
+    console.log("Messgae Management Page render");
+    console.log("Message Management Page location =", location);
 
     useEffect(() => {
         // Replace this with your API endpoint
