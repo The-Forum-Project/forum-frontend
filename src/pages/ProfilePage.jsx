@@ -16,6 +16,13 @@ export default function ProfilePage() {
     const [userViewHistory, setUserViewHistory] = useState([]);
 
     useEffect(() => {
+        // check if the user is trying to access other user's profile
+        let userId = localStorage.getItem("userId");
+        if (params.userId !== userId) {
+            alert("You can't access this profile");
+            navigate("/home");
+            return;
+        }
         // Fetch user data when the component mounts
         fetchUser(params.userId);
     }, [params.userId, token]);
