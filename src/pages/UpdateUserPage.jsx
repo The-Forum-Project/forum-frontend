@@ -17,21 +17,22 @@ export default function UpdateUserPage() {
 
     useEffect(() => {
         // Fetch user data when the component mounts
-        fetchUserData();
-    }, [userId]);
+        const fetchUserData = async () => {
+            const response = await fetch(`http://localhost:9000/user-service/users/${userId}`, {
+                headers: {
+                    'Authorization' : `Bearer ${token}`
+                },
+            });
+            const data = await response.json();
+            setFirstName(data.firstName);
+            setLastName(data.lastName);
+            setEmail(localStorage.getItem("email"));
+            setInitialEmail(localStorage.getItem("email"));
+        };
 
-    const fetchUserData = async () => {
-        const response = await fetch(`http://localhost:9000/user-service/users/${userId}`, {
-            headers: {
-                'Authorization' : `Bearer ${token}`
-            },
-        });
-        const data = await response.json();
-        setFirstName(data.firstName);
-        setLastName(data.lastName);
-        setEmail(localStorage.getItem("email"));
-        setInitialEmail(localStorage.getItem("email"));
-    };
+        fetchUserData();
+    }, [userId, token, fetchCount]);
+
 
     const handleImageChange = (event) => {
         setProfileImage(event.target.files[0]);
