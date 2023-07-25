@@ -52,7 +52,7 @@ export default function ProfilePage() {
             const topPostsData = await userTopPosts.json();
             setTopPosts(topPostsData.posts);
 
-            const viewHistory = await fetch(`http://localhost:9000/history-service/histories`, {
+            const viewHistory = await fetch(`http://localhost:9000/post-composite-service/histories`, {
                 headers: {
                     'Authorization' : `Bearer ${token}`
                 } 
@@ -189,20 +189,20 @@ export default function ProfilePage() {
                         <table>
                             <thead>
                             <tr>
-                                <th>User</th>
-                                <th>Date</th>
+                                <th>View User</th>
                                 <th>Title</th>
-                                {/* Add more table headers as needed */}
+                                <th>Date</th>
+                                {}
                             </tr>
                             </thead>
                             <tbody>
                             {userViewHistory.map((post) => (
                                 <tr key={post.postId}>
-                                <td style={{ padding: "8px" }}>{post.userId}</td>
-                                <td style={{ padding: "8px" }}>{formatDate(post.viewDate)}</td>
-                                <td style={{ padding: "8px" }}>{post.postId}</td>
+                                <td style={{ padding: "8px" }}>{post.post.userId}</td>
+                                <td style={{ padding: "8px" }}>{post.post.title}</td>
+                                <td style={{ padding: "8px" }}>{formatDate(post.history.viewDate)}</td>
                                 <td style={{ padding: "8px" }}>
-                                    <button style={{ padding: "3px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
+                                    <button style={{ padding: "3px" }} onClick={() => viewDetail(post.history.postId)}>View Details</button>
                                 </td> 
                                 </tr>
                             ))}
