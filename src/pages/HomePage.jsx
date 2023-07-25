@@ -66,6 +66,7 @@ export default function HomePage() {
       <div style={{ display: "flex", flexDirection: "row"}}>
       <div style={{marginRight : "100px"}}>
         <h2>Published Posts</h2>
+        <div style={{ height: "500px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
         <table>
             <thead>
             <tr>
@@ -88,11 +89,13 @@ export default function HomePage() {
             ))}
             </tbody>
         </table>
+        </div>
       </div>
 
       <div>
         <div> 
             <h2>My Posts</h2>
+            <div style={{ height: "500px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
             {userPosts.length === 0 ? (
                 <p>You have no posts</p>
             ) : (
@@ -120,9 +123,10 @@ export default function HomePage() {
                 </tbody>
             </table>
             )}
+            </div>
         </div>
       </div>
-
+                    
       {showModifyForm && (
         <ModifyPostForm
           postId={postId}

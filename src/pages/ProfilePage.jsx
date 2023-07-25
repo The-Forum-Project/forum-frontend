@@ -95,7 +95,7 @@ export default function ProfilePage() {
             {userData ? (
                 <div>
                     <h1>{`${userData.firstName} ${userData.lastName}`}</h1>
-                    <p>Registration date: {userData.registrationDate}</p>
+                    <p>Registration date: {formatDate(userData.registrationDate)}</p>
                     <img src={userData.imageURL} alt="User profile" />
                 </div>
             ) : (
@@ -109,6 +109,11 @@ export default function ProfilePage() {
                 <div style={{ marginRight: "50px" }}>
                     <div>
                         <h2>Top 3 posts</h2>
+                        <div style={{ height: "200px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
+                        
+                        {topPosts.length === 0 ? (
+                            <p>You have no posts</p>
+                        ) : ( 
                         <table>
                             <thead>
                             <tr>
@@ -131,10 +136,14 @@ export default function ProfilePage() {
                             ))}
                             </tbody>
                         </table>
+                        )}
+
+                        </div>
                     </div>
 
                     <div>
                         <h2>Drafts</h2>
+                        <div style={{ height: "300px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
                         {userDrafts.length === 0 ? (
                             <p>You have no drafts</p>
                         ) : (
@@ -160,6 +169,7 @@ export default function ProfilePage() {
                             </tbody>
                         </table>
                         )}
+                        </div>
                     </div>
                     {showModifyForm && (
                         <ModifyPostForm
@@ -172,8 +182,10 @@ export default function ProfilePage() {
 
                 <div>
                     <h2>View History</h2>
-                    <div>
-                        <h2>Top 3 posts</h2>
+                        <div style={{ height: "580px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
+                        {topPosts.length === 0 ? (
+                            <p>You have no history</p>
+                        ) : ( 
                         <table>
                             <thead>
                             <tr>
@@ -188,7 +200,7 @@ export default function ProfilePage() {
                                 <tr key={post.postId}>
                                 <td style={{ padding: "8px" }}>{post.userId}</td>
                                 <td style={{ padding: "8px" }}>{formatDate(post.viewDate)}</td>
-                                <td style={{ padding: "8px" }}>{post.title}</td>
+                                <td style={{ padding: "8px" }}>{post.postId}</td>
                                 <td style={{ padding: "8px" }}>
                                     <button style={{ padding: "3px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
                                 </td> 
@@ -196,7 +208,8 @@ export default function ProfilePage() {
                             ))}
                             </tbody>
                         </table>
-                    </div>
+                        )}
+                        </div>
                 </div>
             </div>
             
