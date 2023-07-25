@@ -63,7 +63,7 @@ export default function RegisterPage() {
 
     const isFormEmpty = !state.inputs.username || !state.inputs.password || !state.inputs.firstname || !state.inputs.lastname;
     return (
-        <div>
+        <div style={{ maxWidth: "600px", margin: "0 auto", padding: "40px", boxSizing: "border-box", fontFamily: "Arial, sans-serif" }}>
             <h1 style={{ textAlign: "center", color: "#444" }}>SignUp Page</h1>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <div style={{ marginBottom: "10px" }}>

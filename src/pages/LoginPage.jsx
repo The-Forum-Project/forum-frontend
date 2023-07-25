@@ -79,7 +79,7 @@ export default function LoginPage() {
     const isFormEmpty = !state.inputs.username || !state.inputs.password;
 
     return (
-        <div>
+        <div style={{ maxWidth: "600px", margin: "0 auto", padding: "60px", boxSizing: "border-box", fontFamily: "Arial, sans-serif" }}>
             <h1 style={{ textAlign: "center", color: "#444" }}>Login Page</h1>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <div style={{ marginBottom: "10px" }}>
