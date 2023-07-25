@@ -2,46 +2,63 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NewPostForm from "../components/NewPostForm";
 import ModifyPostForm from "../components/PostEditingForm";
+import AdminView from '../components/AdminView';
 
 export default function HomePage() {
   const [publishedPosts, setPublishedPosts] = useState([]);
+  const [bannedPosts, setBannedPosts] = useState([]);
+  const [deletedPosts, setDeletedPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const [userDrafts, setUserDrafts] = useState([]);
   const [showModifyForm, setShowModifyForm] = useState(false);
   const [postId, setPostId] = useState("");
   const [postStatus, setPostStatus] = useState("");
 
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-            const token = localStorage.getItem("token");
-        if (!token) {
-            console.error("No token found in local storage. Please log in.");
-            return;
-        }
-
-        // Set the token as the Authorization header in the request
-        const headers = { Authorization: `Bearer ${token}` };
-
-        const response = await axios.get(
-          "http://localhost:9000/post-reply-service/posts", {headers}
-        );
-        setPublishedPosts(response.data.posts);
-
-        const userPosts = await axios.get(
-            `http://localhost:9000/post-reply-service/posts/${localStorage.userId}`, {headers}
-        ); 
-        setUserPosts(userPosts.data.posts);
-
-        const drafts = await axios.get(
-            `http://localhost:9000/post-reply-service/posts/${localStorage.userId}/drafts`, {headers}
-        );
-        setUserDrafts(drafts.data.posts);
-      } catch (error) {
-        console.error("Error fetching published posts:", error);
+  async function fetchPosts() {
+    try {
+          const token = localStorage.getItem("token");
+      if (!token) {
+          console.error("No token found in local storage. Please log in.");
+          return;
       }
-    }
 
+      // Set the token as the Authorization header in the request
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const response = await axios.get(
+        "http://localhost:9000/post-reply-service/posts", {headers}
+      );
+      setPublishedPosts(response.data.posts);
+
+      const userPosts = await axios.get(
+          `http://localhost:9000/post-reply-service/posts/${localStorage.userId}`, {headers}
+      ); 
+      setUserPosts(userPosts.data.posts);
+
+      const drafts = await axios.get(
+          `http://localhost:9000/post-reply-service/posts/${localStorage.userId}/drafts`, {headers}
+      );
+      setUserDrafts(drafts.data.posts);
+
+      // Fetch banned and deleted posts if the user is an admin or super
+      if (["admin", "super"].includes(localStorage.authority)) {
+        const bannedResponse = await axios.get(
+          `http://localhost:9000/post-reply-service/posts/banned`, { headers }
+        );
+        setBannedPosts(bannedResponse.data.posts);
+
+        const deletedResponse = await axios.get(
+          `http://localhost:9000/post-reply-service/posts/deleted`, { headers }
+        );
+        setDeletedPosts(deletedResponse.data.posts);
+      }
+
+    } catch (error) {
+      console.error("Error fetching published posts:", error);
+    }
+  }
+
+  useEffect(() => {
     fetchPosts();
   }, []);
 
@@ -60,6 +77,31 @@ export default function HomePage() {
     setPostStatus(status);
     setShowModifyForm(true);
   };
+
+  const updatePostStatus = async (postId, status) => {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.error("No token found in local storage. Please log in.");
+            return;
+        }
+
+        // Set the token as the Authorization header in the request
+        const headers = { Authorization: `Bearer ${token}` };
+
+        await axios.patch(
+            `http://localhost:9000/post-reply-service/posts/${postId}`,
+            { status },
+            { headers }
+        );
+
+        // Refresh the posts after updating status
+        fetchPosts();
+    } catch (error) {
+        console.error(`Error updating status for post ${postId}:`, error);
+    }
+};
+
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", marginTop:"-0px" }}>
@@ -136,6 +178,13 @@ export default function HomePage() {
       )}
 
       </div>
+
+      <AdminView
+        bannedPosts={bannedPosts}
+        deletedPosts={deletedPosts}
+        updatePostStatus={updatePostStatus}
+      />
+
       <div style={{marginTop:"50px", marginBottom:"30px"}}>
         <NewPostForm />
       </div>
