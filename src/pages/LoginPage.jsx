@@ -48,17 +48,18 @@ export default function LoginPage() {
                     localStorage.setItem("email", decodedToken.sub);
                     if (decodedToken.permissions.length !== 0) {
                         localStorage.setItem("authority",decodedToken.permissions[0].authority)
+                        alert("Login Successful");
+                        navigate("/home");
                     } else {
-                        localStorage.setItem("authority", "banned")
+                        localStorage.clear();
+                        alert("Invalid User");
                     }
                 }
-                alert("Login Successful");
-                navigate("/home", { state: { profileData: 2 } });
             } else {
                 // Handle error response here if needed
                 const data = await response.json();
-                console.log(data.message);
                 alert(data.message);
+                localStorage.clear();
             }
         } catch (error) {
             // Handle any network or other errors here
