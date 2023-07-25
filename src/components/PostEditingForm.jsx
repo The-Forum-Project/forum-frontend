@@ -136,7 +136,7 @@ const handleUpdate = async (status) => {
       </div>
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-      {postStatus === "banned" && (<button type="button" onClick={handleUpdate("delete")}>Delete</button>)}
+      {postStatus === "banned" && (<button type="button" onClick={handleCancel}>Cancel</button>)}
       
       {postStatus === "hidden" && (
         <>

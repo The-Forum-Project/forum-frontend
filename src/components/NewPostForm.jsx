@@ -44,12 +44,25 @@ export default function NewPostForm() {
         const headers = { Authorization: `Bearer ${token}` };
   
         // Send the data to the endpoint with the headers
-        await axios.post("http://localhost:9000/post-composite-service/posts", formData, {
-          headers,
-        });
-        
-        alert("Create a new post!");
-        window.location.reload();
+        const response = await fetch("http://localhost:9000/post-composite-service/posts", {
+            method: "POST",
+            headers: headers,
+            body: formData,
+          });
+        console.log("response: ", response);
+
+        if(response.status === 400) {
+            alert("You cannot create a post! Check your input.");
+            console.log("Error: ", response.data.message);
+            return;
+        }else if(response.status === 403) {
+            alert("You cannot create a post! Check your user status.");
+            console.log("Unauthorized operation");
+            return;
+        }else if(response.ok) {
+            alert("Create a new post!");
+            window.location.reload();
+        }
     } catch (error) {
       console.error("Error creating new post:", error);
     }

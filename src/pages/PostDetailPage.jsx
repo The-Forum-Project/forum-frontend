@@ -50,15 +50,16 @@ export default function PostDetailPage() {
           );
     
           if (response.ok) {
-            // Refresh the page after successful reply submission to see the new reply
             window.location.reload();
-          } else {
-            console.error("Error creating new reply:", response);
-          }
+          }else if (response.status === 403) {
+            alert("Unanthorized operation! Check your user status first.");
+            console.error("Error creating new reply: Forbidden");
+          } 
         } catch (error) {
+          alert("Error happend, please try again later");
           console.error("Error creating new reply:", error);
         }
-      };
+    };
 
     useEffect(() => {
         const postUrl = `http://localhost:9000/post-reply-service/post/${postId}`;
@@ -117,11 +118,13 @@ export default function PostDetailPage() {
     
           if (response.ok) {
             window.location.reload();
-          } else {
-            console.error("Error updating subreply:", response);
-          }
+          }else if (response.status === 403) {
+            alert("Unanthorized operation! Check your user status first.");
+            console.error("Error creating new reply: Forbidden");
+          } 
         } catch (error) {
-          console.error("Error updating subreply:", error);
+          alert("Error happend, please try again later");
+          console.error("Error creating new reply:", error);
         }
       };
     
