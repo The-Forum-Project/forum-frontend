@@ -45,6 +45,7 @@ export default function LoginPage() {
                     const decodedToken = jwt_decode(jwtToken);
                     console.log('Decoded Token:', decodedToken);
                     localStorage.setItem("userId", decodedToken.id);
+                    localStorage.setItem("email", decodedToken.sub);
                     if (decodedToken.permissions.length !== 0) {
                         localStorage.setItem("authority",decodedToken.permissions[0].authority)
                     } else {
