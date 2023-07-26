@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
+import FileSelection from "./FileSelection";
 import axios from "axios";
 
 export default function ModifyPostForm({ postId, postStatus, onClose }) {
   // State variables for the form fields
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [images, setImages] = useState([]);
-  const [attachments, setAttachments] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedAttachments, setSelectedAttachments] = useState([]);
 
   useEffect(() => {
     // Fetch the current post data using postId and populate the form fields
@@ -28,8 +29,17 @@ export default function ModifyPostForm({ postId, postStatus, onClose }) {
         const { title, content, images, attachments } = response.data.post;
         setTitle(title);
         setContent(content);
-        setImages(images || []);
-        setAttachments(attachments || []);
+        if (images && images.length > 0) {
+            setSelectedImages(images.map((url) => new File([url], url.split("/").pop())));
+        } else {
+            setSelectedImages([]);
+        }
+    
+        if (attachments && attachments.length > 0) {
+            setSelectedAttachments(attachments.map((url) => new File([url], url.split("/").pop())));
+        } else {
+            setSelectedAttachments([]);
+        }
       } catch (error) {
         console.error("Error fetching post data:", error);
       }
@@ -46,21 +56,39 @@ export default function ModifyPostForm({ postId, postStatus, onClose }) {
     setContent(e.target.value);
   };
 
+  const handleDeleteImage = (index) => {
+    setSelectedImages((prevImages) => {
+      const updatedImages = [...prevImages];
+      updatedImages.splice(index, 1);
+      return updatedImages;
+    });
+  };
+  
+  const handleDeleteAttachment = (index) => {
+    setSelectedAttachments((prevAttachments) => {
+      const updatedAttachments = [...prevAttachments];
+      updatedAttachments.splice(index, 1);
+      return updatedAttachments;
+    });
+  };
+
   const handleImageChange = (e) => {
-    setImages(Array.from(e.target.files));
+    const newImages = Array.from(e.target.files);
+    setSelectedImages((prevImages) => [...prevImages, ...newImages]);
   };
-
+  
   const handleAttachmentChange = (e) => {
-    setAttachments(Array.from(e.target.files));
+    const newAttachments = Array.from(e.target.files);
+    setSelectedAttachments((prevAttachments) => [...prevAttachments, ...newAttachments]);
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    images.forEach((image) => formData.append("images", image));
-    attachments.forEach((attachment) => formData.append("attachments", attachment));
+    selectedImages.forEach((image) => formData.append("images", image));
+    selectedAttachments.forEach((attachment) => formData.append("attachments", attachment));
 
     try {
         const token = localStorage.getItem("token");
@@ -126,16 +154,12 @@ const handleUpdate = async (status) => {
           style={{ width: "100%", boxSizing: "border-box" }} // Set width to 100% and box-sizing to border-box
         />
       </div>
-      <div style={{ marginBottom: "10px", display: "flex", alignItems: "center" }}>
-        <label htmlFor="images">Images:</label>
-        <input style={{marginLeft: "10px"}} type="file" id="images" onChange={handleImageChange} multiple />
-      </div>
-      <div style={{ marginBottom: "20px", display: "flex", alignItems: "center"  }}>
-        <label htmlFor="attachments">Attachments:</label>
-        <input style={{marginLeft: "10px"}} type="file" id="attachments" onChange={handleAttachmentChange} multiple />
-      </div>
+
+      <FileSelection label="Images" selectedFiles={selectedImages} onChange={handleImageChange} onDelete={handleDeleteImage} deleteDisable={true}/>
+      <FileSelection label="Attachments" selectedFiles={selectedAttachments} onChange={handleAttachmentChange} onDelete={handleDeleteAttachment} deleteDisable={true}/>
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+
       {postStatus === "banned" && (<button type="button" onClick={handleCancel}>Cancel</button>)}
       
       {postStatus === "hidden" && (
