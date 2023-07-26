@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
+import FileSelection from "./FileSelection";
 
 export default function NewPostForm() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [images, setImages] = useState([]);
-  const [attachments, setAttachments] = useState([]);
-
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedAttachments, setSelectedAttachments] = useState([]);
+  
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
@@ -15,14 +15,28 @@ export default function NewPostForm() {
     setContent(e.target.value);
   };
 
+  const handleDeleteImage = (index) => {
+    const updatedImages = [...selectedImages];
+    updatedImages.splice(index, 1);
+    setSelectedImages(updatedImages);
+  };
+  
+  const handleDeleteAttachment = (index) => {
+    const updatedAttachments = [...selectedAttachments];
+    updatedAttachments.splice(index, 1);
+    setSelectedAttachments(updatedAttachments);
+  };
+
   const handleImageChange = (e) => {
-    setImages(Array.from(e.target.files));
+    const newImages = Array.from(e.target.files);
+    setSelectedImages((prevImages) => [...prevImages, ...newImages]);
   };
-
+  
   const handleAttachmentChange = (e) => {
-    setAttachments(Array.from(e.target.files));
+    const newAttachments = Array.from(e.target.files);
+    setSelectedAttachments((prevAttachments) => [...prevAttachments, ...newAttachments]);
   };
-
+  
   const handleSubmit = async (e, status) => {
     e.preventDefault();
     // Prepare the data to be sent as a form body
@@ -30,8 +44,8 @@ export default function NewPostForm() {
     formData.append("title", title);
     formData.append("content", content);
     formData.append("status", status);
-    images.forEach((image) => formData.append("images", image));
-    attachments.forEach((attachment) => formData.append("attachments", attachment));
+    selectedImages.forEach((image) => formData.append("images", image));
+    selectedAttachments.forEach((attachment) => formData.append("attachments", attachment));
 
     try {
         const token = localStorage.getItem("token");
@@ -85,14 +99,8 @@ export default function NewPostForm() {
           style={{ width: "100%", boxSizing: "border-box" }} // Set width to 100% and box-sizing to border-box
         />
       </div>
-      <div style={{ marginBottom: "10px", display: "flex", alignItems: "center" }}>
-        <label htmlFor="images">Images:</label>
-        <input style={{marginLeft: "10px"}} type="file" id="images" onChange={handleImageChange} multiple />
-      </div>
-      <div style={{ marginBottom: "20px", display: "flex", alignItems: "center"  }}>
-        <label htmlFor="attachments">Attachments:</label>
-        <input style={{marginLeft: "10px"}} type="file" id="attachments" onChange={handleAttachmentChange} multiple />
-      </div>
+      <FileSelection label="Images" selectedFiles={selectedImages} onChange={handleImageChange} onDelete={handleDeleteImage} deleteDisable={false} />
+      <FileSelection label="Attachments" selectedFiles={selectedAttachments} onChange={handleAttachmentChange} onDelete={handleDeleteAttachment} deleteDisable={false} />
       <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
         <button onClick={(e) => handleSubmit(e, "published")} >Publish</button>
         <button onClick={(e) => handleSubmit(e, "unpublished")} style={{ marginLeft:"45px" }}>Save as a draft</button>
