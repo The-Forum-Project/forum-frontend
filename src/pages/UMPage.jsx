@@ -9,6 +9,10 @@ export default function UMPage() {
 
     useEffect(() => {
         // Replace this with your API endpoint
+        fetchAllUsers();
+    }, []);
+
+    async function fetchAllUsers() {
         const url = 'http://localhost:9000/user-service/users';
 
         fetch(url,{
@@ -26,7 +30,7 @@ export default function UMPage() {
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, []);
+    }
 
     const typeName = (num) => {
         if (num === 0) {
@@ -56,8 +60,7 @@ export default function UMPage() {
         });
 
         if (response.ok) {
-            alert('User status updated successfully!');
-            window.location.reload();
+            fetchAllUsers();
         } else {
             console.log(response);
             alert('Failed to update user status.');
@@ -74,8 +77,7 @@ export default function UMPage() {
         });
 
         if (response.ok) {
-            alert('User status updated successfully!');
-            window.location.reload();
+            fetchAllUsers();
         } else {
             console.log(response);
             alert('Failed to update user status.');
