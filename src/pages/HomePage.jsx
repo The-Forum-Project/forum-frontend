@@ -100,7 +100,7 @@ export default function HomePage() {
     } catch (error) {
         console.error(`Error updating status for post ${postId}:`, error);
     }
-};
+  };
 
 
   return (
@@ -109,31 +109,36 @@ export default function HomePage() {
       <div style={{marginRight : "100px"}}>
         <h2>Published Posts</h2>
         <div style={{ height: "500px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
-        <table>
+          <table>
             <thead>
-            <tr>
+              <tr>
                 <th>User</th>
                 <th>Date</th>
                 <th>Title</th>
-                {/* Add more table headers as needed */}
-            </tr>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
             {publishedPosts.map((post) => (
-                <tr key={post.postId}>
+              <tr key={post.postId}>
                 <td style={{ padding: "8px" }}>{post.userId}</td>
                 <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
                 <td style={{ padding: "8px" }}>{post.title}</td>
                 <td style={{ padding: "8px" }}>
-                    <button style={{ padding: "3px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
+                  <button style={{ padding: "3px", marginRight: "5px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
+                  {["admin", "super"].includes(localStorage.authority) && ( // Check if user is admin or super
+                    <button style={{ padding: "3px" }} onClick={() => updatePostStatus(post.postId, post.status === "banned" ? "published" : "banned")}>
+                      {post.status === "banned" ? "Unban" : "Ban"}
+                    </button>
+                  )}
                 </td> 
-                </tr>
+              </tr>
             ))}
             </tbody>
-        </table>
+          </table>
         </div>
       </div>
-
+      
       <div>
         <div> 
             <h2>My Posts</h2>
