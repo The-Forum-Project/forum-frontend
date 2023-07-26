@@ -58,13 +58,54 @@ export default function VerifyUserPage() {
         }
     };
 
+    // Styles
+    const containerStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: '20px',
+        marginTop: '100px'
+    };
+    
+    const inputStyle = {
+        marginTop: '20px',
+        textAlign: 'center',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        padding: '12px 20px',
+        fontSize: '16px'
+    };
+    
+    const buttonStyle = {
+        marginTop: '5%',
+        backgroundColor: '#4CAF50',
+        border: 'none',
+        color: 'white',
+        padding: '15px 32px',
+        textAlign: 'center',
+        textDecoration: 'none',
+        display: 'inline-block',
+        fontSize: '16px',
+        margin: '4px 2px',
+        cursor: 'pointer',
+        borderRadius: '4px'
+    };
+
     return (
-        <div>
-            <label>
-                Verification Code:
-                <input type="text" value={verificationCode} onChange={handleInputChange} />
-            </label>
-            <button onClick={verifyUser}>Verify</button>
+        <div style={containerStyle}>
+            <label htmlFor="verificationCode">Verification Code</label>
+            <input 
+                type="text" 
+                id="verificationCode" 
+                name="verificationCode" 
+                value={verificationCode} 
+                onChange={handleInputChange} 
+                style={inputStyle}
+                minLength="6" 
+                maxLength="6"
+            />
+            <button onClick={verifyUser} style={buttonStyle}>Verify</button>
         </div>
     );
 }
