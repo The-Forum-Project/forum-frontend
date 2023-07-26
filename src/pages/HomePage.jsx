@@ -107,7 +107,7 @@ export default function HomePage() {
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", marginTop:"-0px" }}>
       <div style={{ display: "flex", flexDirection: "row"}}>
       <div style={{marginRight : "100px"}}>
-        <h2>Published Posts</h2>
+        <h2>{["admin", "super"].includes(localStorage.authority) ? "All Posts" : "Published Posts"}</h2>
         <div style={{ height: "500px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
           <table>
             <thead>
@@ -138,7 +138,7 @@ export default function HomePage() {
           </table>
         </div>
       </div>
-      
+
       <div>
         <div> 
             <h2>My Posts</h2>
