@@ -2,6 +2,45 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ModifyPostForm from "../components/PostEditingForm";
 
+const containerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    padding: '30px',
+    background: '#f9f9f9'
+};
+
+const boxStyle = {
+    border: '1px solid #ccc',
+    borderRadius: '10px',
+    padding: '20px',
+    margin: '10px',
+    width: 'auto',
+    background: '#fff',
+    boxShadow: '2px 2px 15px -1px rgba(0,0,0,0.15)'
+};
+
+const buttonStyle = {
+    marginTop: '10px',
+    backgroundColor: '#4CAF50',
+    border: 'none',
+    color: 'white',
+    padding: '10px 20px',
+    textAlign: 'center',
+    textDecoration: 'none',
+    display: 'inline-block',
+    fontSize: '16px',
+    margin: '4px 2px',
+    cursor: 'pointer',
+    borderRadius: '5px'
+};
+
+const tableStyle = {
+    width: '100%',
+    marginTop: '10px'
+};
+
 export default function ProfilePage() {
     const params = useParams();
     const navigate = useNavigate();
@@ -97,8 +136,8 @@ export default function ProfilePage() {
     };
 
     return (
-        <div style={{display:"flex"}}>
-            <div>
+        <div style={containerStyle}>
+            <div style={boxStyle}>
             {userData ? (
                 <div>
                     <h1>{`${userData.firstName} ${userData.lastName}`}</h1>
@@ -108,25 +147,49 @@ export default function ProfilePage() {
             ) : (
                 <p>Loading...</p>
             )}
-            <button onClick={redirectHome}>Return to Home</button>
-            <button onClick={updateUser}>Update User</button>
+            <button style={buttonStyle} onClick={redirectHome}>Return to Home</button>
+            <button style={buttonStyle} onClick={updateUser}>Update User</button>
             </div>
 
-            <div style={{display:"flex", marginLeft: "70px"}}>
-                <div style={{ marginRight: "50px" }}>
+            <div style={{...boxStyle, display:"flex", justifyContent: 'space-around'}}>
+
+                {/* Use this common styles for all tables */}
+                <style jsx>{`
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+
+                    th {
+                        background-color: #f2f2f2;
+                        padding: 8px;
+                        text-align: center;
+                        border-bottom: 1px solid #ddd;
+                    }
+
+                    td {
+                        padding: 8px;
+                        border-bottom: 1px solid #ddd;
+                    }
+
+                    tr:hover {background-color: #f5f5f5;}
+                `}</style>
+
+                <div style={{flexGrow: 1}}>
                     <div>
                         <h2>Top 3 posts</h2>
                         <div style={{ height: "200px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
                         
                         {topPosts.length === 0 ? (
-                            <p>You have no posts</p>
+                            <p style={{margin: "1em"}}>You have no posts</p>
                         ) : ( 
-                        <table>
+                        <table style={tableStyle}>
                             <thead>
                             <tr>
                                 <th>User</th>
                                 <th>Date</th>
                                 <th>Title</th>
+                                <th>Action</th>
                                 {/* Add more table headers as needed */}
                             </tr>
                             </thead>
@@ -152,14 +215,15 @@ export default function ProfilePage() {
                         <h2>Drafts</h2>
                         <div style={{ height: "300px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
                         {userDrafts.length === 0 ? (
-                            <p>You have no drafts</p>
+                            <p style={{margin: "1em"}}>You have no drafts</p>
                         ) : (
-                        <table>
+                        <table style={tableStyle}>
                             <thead>
                             <tr>
                                 <th>User</th>
                                 <th>Date</th>
                                 <th>Title</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -187,18 +251,19 @@ export default function ProfilePage() {
                     )}
                 </div>
 
-                <div>
+                <div style={{flexGrow: 1}}>
                     <h2>View History</h2>
-                        <div style={{ height: "580px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
+                        <div style={{ marginLeft: "30px", height: "580px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
                         {topPosts.length === 0 ? (
-                            <p>You have no history</p>
+                            <p style={{margin: "1em"}}>You have no history</p>
                         ) : ( 
-                        <table>
+                        <table style={tableStyle}>
                             <thead>
                             <tr>
                                 <th>View User</th>
                                 <th>Title</th>
                                 <th>Date</th>
+                                <th>Action</th>
                                 {}
                             </tr>
                             </thead>
@@ -219,7 +284,6 @@ export default function ProfilePage() {
                         </div>
                 </div>
             </div>
-            
         </div>
     );
 }
