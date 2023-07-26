@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NewPostForm from "../components/NewPostForm";
 import ModifyPostForm from "../components/PostEditingForm";
-import AdminView from '../components/AdminView';
+import Modal from "../components/Modal";
 
 export default function HomePage() {
   const [publishedPosts, setPublishedPosts] = useState([]);
@@ -13,6 +13,7 @@ export default function HomePage() {
   const [showModifyForm, setShowModifyForm] = useState(false);
   const [postId, setPostId] = useState("");
   const [postStatus, setPostStatus] = useState("");
+  const [showNewPostForm, setShowNewPostForm] = useState(false);
 
   async function fetchPosts() {
     try {
@@ -102,97 +103,208 @@ export default function HomePage() {
     }
   };
 
+  const startNewPost = () => {
+    setShowNewPostForm(true);
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", marginTop:"-0px" }}>
-      <div style={{ display: "flex", flexDirection: "row"}}>
-      <div style={{marginRight : "100px"}}>
-        <h2>{["admin", "super"].includes(localStorage.authority) ? "All Posts" : "Published Posts"}</h2>
-        <div style={{ height: "500px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
-          <table>
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Date</th>
-                <th>Title</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-            {publishedPosts.map((post) => (
-              <tr key={post.postId}>
-                <td style={{ padding: "8px" }}>{post.userId}</td>
-                <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
-                <td style={{ padding: "8px" }}>{post.title}</td>
-                <td style={{ padding: "8px" }}>
-                  <button style={{ padding: "3px", marginRight: "5px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
-                  {["admin", "super"].includes(localStorage.authority) && ( // Check if user is admin or super
-                    <button style={{ padding: "3px" }} onClick={() => updatePostStatus(post.postId, post.status === "banned" ? "published" : "banned")}>
-                      {post.status === "banned" ? "Unban" : "Ban"}
-                    </button>
-                  )}
-                </td> 
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </div>
+      <div style={{ display: "flex", justifyContent: "space-between", width: "100%", gap: "30px", flexWrap: "wrap" }}> {/* gap for spacing between sections, and flexWrap to ensure proper layout on smaller screens */}
+
+        {/* Use this common styles for all tables */}
+        <style jsx>{`
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+
+          th {
+            background-color: #f2f2f2;
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+          }
+
+          td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+          }
+
+          tr:hover {background-color: #f5f5f5;}
+        `}</style>
+
+        <section style={{ marginBottom: "30px", flex: "1 1 calc(50% - 15px)", boxSizing: "border-box" }}> {/* flex and box-sizing for proper grid layout */}
+          <h2>{["admin", "super"].includes(localStorage.authority) ? "All Posts" : "Published Posts"}</h2>
+          <div style={{ height: "500px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Date</th>
+                  <th>Title</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+              {publishedPosts.map((post) => (
+                <tr key={post.postId}>
+                  <td style={{ padding: "8px" }}>{post.userId}</td>
+                  <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
+                  <td style={{ padding: "8px" }}>{post.title}</td>
+                  <td style={{ padding: "8px" }}>
+                    <button style={{ padding: "3px", marginRight: "5px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
+                    {["admin", "super"].includes(localStorage.authority) && ( // Check if user is admin or super
+                      <button style={{ padding: "3px" }} onClick={() => updatePostStatus(post.postId, post.status === "banned" ? "published" : "banned")}>
+                        {post.status === "banned" ? "Unban" : "Ban"}
+                      </button>
+                    )}
+                  </td> 
+                </tr>
+              ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section style={{ marginBottom: "30px", flex: "1 1 calc(50% - 15px)", boxSizing: "border-box" }}>
+          <h2>My Posts</h2>
+          <div style={{ height: "500px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
+            {userPosts.length === 0 ? (
+              <p>You have no posts</p>
+            ) : (
+              <table>
+                  <thead>
+                  <tr>
+                      <th>User</th>
+                      <th>Date</th>
+                      <th>Title</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {userPosts.map((post) => (
+                      <tr key={post.postId}>
+                      <td style={{ padding: "8px" }}>{post.userId}</td>
+                      <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
+                      <td style={{ padding: "8px" }}>{post.title}</td>
+                      <td style={{ padding: "8px" }}>{post.status}</td> 
+                      <td style={{ padding: "8px" }}>
+                          <button style={{ padding: "3px" }} onClick={() => modifyPost(post.postId, post.status)}>Modify this post</button>
+                      </td>
+                      </tr>
+                  ))}
+                  </tbody>
+              </table>
+            )}
+          </div>
+        </section>
+
+        {["admin", "super"].includes(localStorage.authority) && (
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%", gap: "30px", flexWrap: "wrap" }}> {/* gap for spacing between sections, and flexWrap to ensure proper layout on smaller screens */}
+            <section style={{ marginBottom: "30px", flex: "1 1 calc(50% - 15px)", boxSizing: "border-box" }}> {/* flex and box-sizing for proper grid layout */}
+              <h2>Banned Posts</h2>
+              {bannedPosts.length === 0 ? (
+                <p>There are no banned posts</p>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Date</th>
+                      <th>Title</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bannedPosts.map((post) => (
+                      <tr key={post.postId}>
+                        <td>{post.userId}</td>
+                        <td>{formatDate(post.dateCreated)}</td>
+                        <td>{post.title}</td>
+                        <td>
+                          <button onClick={() => updatePostStatus(post.postId, "published")}>
+                            Unban
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+            )}
+            </section>
+
+            <section style={{ marginBottom: "30px", flex: "1 1 calc(50% - 15px)", boxSizing: "border-box" }}>
+              <h2>Deleted Posts</h2>
+              {deletedPosts.length === 0 ? (
+                <p>There are no deleted posts</p>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Date</th>
+                      <th>Title</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {deletedPosts.map((post) => (
+                      <tr key={post.postId}>
+                        <td>{post.userId}</td>
+                        <td>{formatDate(post.dateCreated)}</td>
+                        <td>{post.title}</td>
+                        <td>
+                          <button onClick={() => updatePostStatus(post.postId, "published")}>
+                            Recover
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+            )}
+            </section>
+          </div>
+        )}
       </div>
 
-      <div>
-        <div> 
-            <h2>My Posts</h2>
-            <div style={{ height: "500px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
-            {userPosts.length === 0 ? (
-                <p>You have no posts</p>
-            ) : (
-            <table>
-                <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Date</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                {userPosts.map((post) => (
-                    <tr key={post.postId}>
-                    <td style={{ padding: "8px" }}>{post.userId}</td>
-                    <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
-                    <td style={{ padding: "8px" }}>{post.title}</td>
-                    <td style={{ padding: "8px" }}>{post.status}</td> 
-                    <td style={{ padding: "8px" }}>
-                        <button style={{ padding: "3px" }} onClick={() => modifyPost(post.postId, post.status)}>Modify this post</button>
-                    </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            )}
-            </div>
-        </div>
-      </div>
-                    
       {showModifyForm && (
-        <ModifyPostForm
-          postId={postId}
-          postStatus={postStatus}
-          onClose={() => setShowModifyForm(false)} // Function to close the form when canceled
-        />
+        <Modal onClose={() => setShowModifyForm(false)}>
+          <ModifyPostForm
+            postId={postId}
+            postStatus={postStatus}
+            onClose={() => setShowModifyForm(false)} // Function to close the form when canceled
+          />
+        </Modal>
       )}
 
-      </div>
+      {showNewPostForm && (
+        <Modal onClose={() => setShowNewPostForm(false)}>
+          <NewPostForm />
+        </Modal>
+      )}
+      
+      <button 
+        onClick={startNewPost}
+        style={{
+          position: 'fixed',
+          right: '20px',
+          bottom: '20px',
+          borderRadius: '50%',
+          width: '60px',
+          height: '60px',
+          fontSize: '24px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#4caf50', /* Green */
+          color: 'white',
+        }}
+      >
+        +
+      </button>
 
-      <AdminView
-        bannedPosts={bannedPosts}
-        deletedPosts={deletedPosts}
-        updatePostStatus={updatePostStatus}
-      />
-
-      <div style={{marginTop:"50px", marginBottom:"30px"}}>
-        <NewPostForm />
-      </div>
     </div>
   );
 }

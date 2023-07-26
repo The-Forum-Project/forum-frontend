@@ -1,5 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem;
+`;
+
+const Label = styled.label`
+    display: flex;
+    flex-direction: column;
+    font-size: 1.2rem;
+    color: #333;
+    text-align: left;
+`;
+
+const Button = styled.button`
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+`;
+
+const inputStyle = {
+    fontSize: '1rem',
+    padding: '0.5rem',
+    borderRadius: '5px',
+    border: '1px solid #ddd',
+    marginTop: '0.5rem'
+}
 
 export default function UpdateUserPage() {
     const params = useParams();
@@ -75,28 +114,28 @@ export default function UpdateUserPage() {
     };
 
     return (
-        <form onSubmit={updateUser}>
-            <label>
+        <Form onSubmit={updateUser}>
+            <Label>
             First Name:
-            <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} />
-            </label>
-            <label>
+            <input style={inputStyle} type="text" value={firstName} onChange={e => setFirstName(e.target.value)} />
+            </Label>
+            <Label>
             Last Name:
-            <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
-            </label>
-            <label>
+            <input style={inputStyle} type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
+            </Label>
+            <Label>
             Email:
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
-            </label>
-            <label>
+            <input style={inputStyle} type="email" value={email} onChange={e => setEmail(e.target.value)} />
+            </Label>
+            <Label>
             Password:
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-            </label>
-            <label>
+            <input style={inputStyle} type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            </Label>
+            <Label>
             Profile Image:
-            <input type="file" onChange={handleImageChange} />
-            </label>
-            <button type="submit">Update User</button>
-        </form>
+            <input style={inputStyle} type="file" onChange={handleImageChange} />
+            </Label>
+            <Button type="submit">Update User</Button>
+        </Form>
     );
 }
