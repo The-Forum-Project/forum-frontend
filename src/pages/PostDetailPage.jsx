@@ -13,6 +13,46 @@ const buttonStyles = {
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a subtle box shadow
 };
 
+const containerStyle = {
+    maxWidth: "900px",
+    margin: "0 auto",
+    background: "#f9f9f9",
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+  };
+  
+  const postContainerStyle = {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  };
+  
+  const replyContainerStyle = {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    marginTop: "20px",
+  };
+
+  const replyContentContainerStyle = {
+    background: "#f9f9f9",
+    padding: "15px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    marginBottom: "15px",
+  };
+
+  const subReplyContentContainerStyle = {
+    background: "#f2f2f2", // Lighter gray background color
+    padding: "15px",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    marginTop: "10px", // Adjust margin to create separation from the main reply content
+  };
+  
 export default function PostDetailPage() {
     //const params = useParams();
     const navigate = useNavigate();
@@ -48,6 +88,10 @@ export default function PostDetailPage() {
 
     const handleReplySubmit = async (e) => {
         e.preventDefault();
+        if (!replyContent.trim()) {
+            alert("Reply content cannot be empty!");
+            return;
+        }
         try {
           const replyData = { comment: replyContent };
           const response = await fetch(
@@ -115,6 +159,10 @@ export default function PostDetailPage() {
 
     const handleSubReplySubmit = async (e, replyIndex) => {
         e.preventDefault();
+        if (!replyContent.trim()) {
+            alert("Reply content cannot be empty!");
+            return;
+        }
         try {
           const subReplyData = { comment: subReplies[replyIndex] };
           const response = await fetch(
@@ -157,9 +205,10 @@ export default function PostDetailPage() {
         return <div>Loading...</div>;  // render a loading message while fetching
     } else {
         return (
-            <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+            <div style={containerStyle}>
                 {post ? (
-                    <div>
+                    <div style={postContainerStyle}>
+                        <div>
                         <h1 style={{ borderBottom: "1px solid #ddd", paddingBottom: "10px" }}>{post.title}</h1>
                         <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
                             <img src={users[post.userId].imageURL} alt={users[post.userId].firstName} style={{ borderRadius: "50%", marginRight: "10px", width: '50px', height: '50px' }}/>
@@ -176,7 +225,8 @@ export default function PostDetailPage() {
                                 <img src={image} alt="attachment's image" style={{ width: '100%', maxHeight: '500px' }} />
                             </div>
                         ))}
-
+                    </div>
+                    <div style={replyContainerStyle}>
                         {/* Add reply form here */}
                         <form onSubmit={handleReplySubmit}>
                             <textarea
@@ -188,41 +238,50 @@ export default function PostDetailPage() {
                             ></textarea>
                             <button style={buttonStyles} type="submit">Submit Reply</button>
                         </form>
-                        
+                    </div>    
                         {/* show replies here */}
+                        <div style={replyContainerStyle}>
                         <div style={{ marginTop: "20px" }}>Replies:
                             {post.postReplies ? (post.postReplies.map((reply, index) => (
-                                <div key={reply.id} style={{ display: "flex", alignItems: "flex-start", marginTop: "15px", marginLeft: "10px" }}>
-                                    <img src={users[reply.userId].imageURL} alt={users[reply.userId].firstName} style={{ borderRadius: "50%", marginRight: "10px", width: '30px', height: '30px' }}/>
-                                    <div>
-                                        <h4>{users[reply.userId].firstName} {users[reply.userId].lastName}</h4>
-                                        <p>{reply.comment}</p>
-
+                                <div style={subReplyContentContainerStyle} key={reply.id} >
+                                        <div style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+                                            <div style={{display:"flex", alignItems:"center"}}>
+                                            <img src={users[reply.userId].imageURL} alt={users[reply.userId].firstName} style={{ borderRadius: "50%", marginRight: "10px", width: '30px', height: '30px' }}/>
+                                            <h4>{users[reply.userId].firstName} {users[reply.userId].lastName}</h4>
+                                            </div>
+                                            <div style={{marginLeft:"40px"}}>
+                                            {reply.comment}
+                                            </div>
+                                        </div>
+                                        
                                         <form onSubmit={(e) => handleSubReplySubmit(e, index)}>
                                         <textarea
                                             value={subReplies[index] || ""}
                                             onChange={(e) => handleSubReplyChange(index, e.target.value)}
                                             placeholder="Write your subreply..."
                                             rows="3"
-                                            style={{ width: "100%", resize: "none", marginBottom: "10px" }}
+                                            style={{ width: "100%", resize: "none", marginTop:"20px",marginBottom: "10px" }}
                                         ></textarea>
                                         <button style={buttonStyles} type="submit">Submit Subreply</button>
                                         </form>
 
                                         {reply.subReplies.map((subReply) => (
-                                            <div key={subReply.id} style={{ display: "flex", alignItems: "flex-start", marginLeft: "20px", marginTop: "10px" }}>
+                                            <div key={subReply.id} style={{display: "flex", flexDirection: "column", alignItems: "flex-start"}}>
+                                                <div style={{display:"flex", alignItems:"center"}}>
                                                 <img src={users[subReply.userId].imageURL} alt={users[subReply.userId].firstName} style={{ borderRadius: "50%", marginRight: "10px", width: '30px', height: '30px' }}/>
-                                                <div>
-                                                    <h5>{users[subReply.userId].firstName} {users[subReply.userId].lastName}</h5>
+                                                <h5>{users[subReply.userId].firstName} {users[subReply.userId].lastName}</h5>
+                                                </div>
+                                                <div style={{marginLeft:"40px", marginTop:"-10px"}}>
                                                     <p>{subReply.comment}</p>
                                                 </div>
                                             </div>
                                         ))}
-                                    </div>
+                                    
                                 </div>
                             ))) : (<div></div>)}
                         </div>
                     </div>
+                </div>
                 ) : (
                     <p>Loading...</p>
                 )}
