@@ -36,6 +36,18 @@ const buttonStyle = {
     borderRadius: '5px'
 };
 
+const buttonStyles = {
+    margin: "5px",
+    padding: "10px 15px",
+    fontWeight: "bold",
+    borderRadius: "4px",
+    backgroundColor: "#1976d2", // Darker blue background color
+    color: "white", // White text color
+    border: "none", // No border
+    cursor: "pointer", // Show pointer cursor on hover
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a subtle box shadow
+};
+
 const tableStyle = {
     width: '100%',
     marginTop: '10px'
@@ -200,7 +212,7 @@ export default function ProfilePage() {
                                 <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
                                 <td style={{ padding: "8px" }}>{post.title}</td>
                                 <td style={{ padding: "8px" }}>
-                                    <button style={{ padding: "3px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
+                                    <button style={buttonStyles} onClick={() => viewDetail(post.postId)}>View Details</button>
                                 </td> 
                                 </tr>
                             ))}
@@ -233,7 +245,7 @@ export default function ProfilePage() {
                                 <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
                                 <td style={{ padding: "8px" }}>{post.title}</td>
                                 <td style={{ padding: "8px" }}>
-                                    <button style={{ padding: "3px" }} onClick={() => modifyPost(post.postId, post.status)}>Continue edit</button>
+                                    <button style={buttonStyles} onClick={() => modifyPost(post.postId, post.status)}>Continue edit</button>
                                 </td>
                                 </tr>
                             ))}
@@ -274,7 +286,7 @@ export default function ProfilePage() {
                                 <td style={{ padding: "8px" }}>{post.post.title}</td>
                                 <td style={{ padding: "8px" }}>{formatDate(post.history.viewDate)}</td>
                                 <td style={{ padding: "8px" }}>
-                                    <button style={{ padding: "3px" }} onClick={() => viewDetail(post.history.postId)}>View Details</button>
+                                    <button style={buttonStyles} onClick={() => viewDetail(post.history.postId)}>View Details</button>
                                 </td> 
                                 </tr>
                             ))}

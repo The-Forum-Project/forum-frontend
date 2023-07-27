@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FileSelection from "./FileSelection";
 import axios from "axios";
 
-export default function ModifyPostForm({ postId, postStatus, onClose }) {
+export default function ModifyPostForm({ postId, postStatus, onClose, isArchived }) {
   // State variables for the form fields
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -137,6 +137,34 @@ const handleUpdate = async (status) => {
     }
 };
 
+const handleArchiveToggle = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found in local storage. Please log in.");
+        return;
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const body = {
+        isArchived: !isArchived, // Toggle the value of isArchived
+      };
+
+      const response = await axios.patch(
+        `http://localhost:9000/post-reply-service/posts/${postId}`,
+        body,
+        { headers }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating post archive status:", error);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: "600px", margin: "0 auto" }}>
       <div style={{ marginBottom: "10px" }}>
@@ -183,6 +211,9 @@ const handleUpdate = async (status) => {
             <button type="button" onClick={() => handleUpdate("deleted")}>delete</button>
             <button type="button" onClick={() => handleUpdate("hidden")}>hide</button> 
             <button type="submit">Save Changes</button>
+            <button type="button" onClick={handleArchiveToggle}>
+                {isArchived ? "Unarchive" : "Archive"}
+            </button>
             <button type="button" onClick={handleCancel}>Cancel</button>
         </>}
       </div>
