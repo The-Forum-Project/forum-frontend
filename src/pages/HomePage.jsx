@@ -4,16 +4,28 @@ import NewPostForm from "../components/NewPostForm";
 import ModifyPostForm from "../components/PostEditingForm";
 import Modal from "../components/Modal";
 
+const buttonStyles = {
+  margin: "5px",
+  padding: "10px 15px",
+  fontWeight: "bold",
+  borderRadius: "4px",
+  backgroundColor: "#1976d2", // Darker blue background color
+  color: "white", // White text color
+  border: "none", // No border
+  cursor: "pointer", // Show pointer cursor on hover
+  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a subtle box shadow
+  };
+
 export default function HomePage() {
   const [publishedPosts, setPublishedPosts] = useState([]);
   const [bannedPosts, setBannedPosts] = useState([]);
   const [deletedPosts, setDeletedPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
-  const [userDrafts, setUserDrafts] = useState([]);
   const [showModifyForm, setShowModifyForm] = useState(false);
   const [postId, setPostId] = useState("");
   const [postStatus, setPostStatus] = useState("");
   const [showNewPostForm, setShowNewPostForm] = useState(false);
+  const [isArchived, setIsArchived] = useState(false);
 
   async function fetchPosts() {
     try {
@@ -35,11 +47,6 @@ export default function HomePage() {
           `http://localhost:9000/post-reply-service/posts/${localStorage.userId}`, {headers}
       ); 
       setUserPosts(userPosts.data.posts);
-
-      const drafts = await axios.get(
-          `http://localhost:9000/post-reply-service/posts/${localStorage.userId}/drafts`, {headers}
-      );
-      setUserDrafts(drafts.data.posts);
 
       // Fetch banned and deleted posts if the user is an admin or super
       if (["admin", "super"].includes(localStorage.authority)) {
@@ -73,9 +80,10 @@ export default function HomePage() {
     return date.toLocaleDateString(); // Change the format as needed
   };
 
-  const modifyPost = (postId, status) => {
+  const modifyPost = (postId, status, isArchived) => {
     setPostId(postId);
     setPostStatus(status);
+    setIsArchived(isArchived);
     setShowModifyForm(true);
   };
 
@@ -152,9 +160,9 @@ export default function HomePage() {
                   <td style={{ padding: "8px" }}>{formatDate(post.dateCreated)}</td>
                   <td style={{ padding: "8px" }}>{post.title}</td>
                   <td style={{ padding: "8px" }}>
-                    <button style={{ padding: "3px", marginRight: "5px" }} onClick={() => viewDetail(post.postId)}>View Details</button>
+                    <button style={buttonStyles} onClick={() => viewDetail(post.postId)}>View Details</button>
                     {["admin", "super"].includes(localStorage.authority) && ( // Check if user is admin or super
-                      <button style={{ padding: "3px" }} onClick={() => updatePostStatus(post.postId, post.status === "banned" ? "published" : "banned")}>
+                      <button style={buttonStyles} onClick={() => updatePostStatus(post.postId, post.status === "banned" ? "published" : "banned")}>
                         {post.status === "banned" ? "Unban" : "Ban"}
                       </button>
                     )}
@@ -190,7 +198,7 @@ export default function HomePage() {
                       <td style={{ padding: "8px" }}>{post.title}</td>
                       <td style={{ padding: "8px" }}>{post.status}</td> 
                       <td style={{ padding: "8px" }}>
-                          <button style={{ padding: "3px" }} onClick={() => modifyPost(post.postId, post.status)}>Modify this post</button>
+                          <button style={buttonStyles} onClick={() => modifyPost(post.postId, post.status, post.isArchived)}>Modify this post</button>
                       </td>
                       </tr>
                   ))}
@@ -223,7 +231,7 @@ export default function HomePage() {
                         <td>{formatDate(post.dateCreated)}</td>
                         <td>{post.title}</td>
                         <td>
-                          <button onClick={() => updatePostStatus(post.postId, "published")}>
+                          <button style={buttonStyles} onClick={() => updatePostStatus(post.postId, "published")}>
                             Unban
                           </button>
                         </td>
@@ -255,7 +263,7 @@ export default function HomePage() {
                         <td>{formatDate(post.dateCreated)}</td>
                         <td>{post.title}</td>
                         <td>
-                          <button onClick={() => updatePostStatus(post.postId, "published")}>
+                          <button buttonStyles onClick={() => updatePostStatus(post.postId, "published")}>
                             Recover
                           </button>
                         </td>
@@ -274,7 +282,8 @@ export default function HomePage() {
           <ModifyPostForm
             postId={postId}
             postStatus={postStatus}
-            onClose={() => setShowModifyForm(false)} // Function to close the form when canceled
+            onClose={() => setShowModifyForm(false)}
+            isArchived={isArchived} // Function to close the form when canceled
           />
         </Modal>
       )}

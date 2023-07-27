@@ -1,5 +1,18 @@
 import React, {useEffect, useState} from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
+const buttonStyles = {
+    margin: "5px",
+    padding: "10px 15px",
+    fontWeight: "bold",
+    borderRadius: "4px",
+    backgroundColor: "#1976d2", // Darker blue background color
+    color: "white", // White text color
+    border: "none", // No border
+    cursor: "pointer", // Show pointer cursor on hover
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a subtle box shadow
+};
+
 export default function PostDetailPage() {
     //const params = useParams();
     const navigate = useNavigate();
@@ -173,7 +186,7 @@ export default function PostDetailPage() {
                             rows="4"
                             style={{ width: "100%", resize: "none", marginBottom: "10px" }}
                             ></textarea>
-                            <button type="submit">Submit Reply</button>
+                            <button style={buttonStyles} type="submit">Submit Reply</button>
                         </form>
                         
                         {/* show replies here */}
@@ -193,7 +206,7 @@ export default function PostDetailPage() {
                                             rows="3"
                                             style={{ width: "100%", resize: "none", marginBottom: "10px" }}
                                         ></textarea>
-                                        <button type="submit">Submit Subreply</button>
+                                        <button style={buttonStyles} type="submit">Submit Subreply</button>
                                         </form>
 
                                         {reply.subReplies.map((subReply) => (
