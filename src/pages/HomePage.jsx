@@ -263,7 +263,7 @@ export default function HomePage() {
                         <td>{formatDate(post.dateCreated)}</td>
                         <td>{post.title}</td>
                         <td>
-                          <button buttonStyles onClick={() => updatePostStatus(post.postId, "published")}>
+                          <button style={buttonStyles} onClick={() => updatePostStatus(post.postId, "published")}>
                             Recover
                           </button>
                         </td>

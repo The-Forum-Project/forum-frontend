@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 import FileSelection from "./FileSelection";
 
+const buttonStyles = {
+    margin: "5px",
+    padding: "10px 15px",
+    fontWeight: "bold",
+    borderRadius: "4px",
+    backgroundColor: "#1976d2", // Darker blue background color
+    color: "white", // White text color
+    border: "none", // No border
+    cursor: "pointer", // Show pointer cursor on hover
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a subtle box shadow
+};
+
 export default function NewPostForm() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -102,8 +114,8 @@ export default function NewPostForm() {
       <FileSelection label="Images" selectedFiles={selectedImages} onChange={handleImageChange} onDelete={handleDeleteImage} deleteDisable={false} />
       <FileSelection label="Attachments" selectedFiles={selectedAttachments} onChange={handleAttachmentChange} onDelete={handleDeleteAttachment} deleteDisable={false} />
       <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-        <button onClick={(e) => handleSubmit(e, "published")} >Publish</button>
-        <button onClick={(e) => handleSubmit(e, "unpublished")} style={{ marginLeft:"45px" }}>Save as a draft</button>
+        <button style = {buttonStyles} onClick={(e) => handleSubmit(e, "published")} >Publish</button>
+        <button onClick={(e) => handleSubmit(e, "unpublished")} style={buttonStyles}>Save as a draft</button>
       </div>
     </form>
   );
