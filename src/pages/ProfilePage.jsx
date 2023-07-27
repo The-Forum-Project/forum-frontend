@@ -71,6 +71,10 @@ export default function ProfilePage() {
     const [topPosts, setTopPosts] = useState([]);
     const [userViewHistory, setUserViewHistory] = useState([]);
 
+    const [loadingHistory, setLoadingHistory] = useState(true);
+    const [loadingTopPosts, setLoadingTopPosts] = useState(true);
+    const [loadingDrafts, setLoadingDrafts] = useState(true);
+
     useEffect(() => {
         // check if the user is trying to access other user's profile
         let userId = localStorage.getItem("userId");
@@ -85,6 +89,10 @@ export default function ProfilePage() {
 
     const fetchUser = async (id) => {
         try {
+            setLoadingDrafts(true);
+            setLoadingHistory(true);
+            setLoadingTopPosts(true);
+
             const response = await fetch(`http://localhost:9000/user-service/users/${id}`, {
                 headers: {
                     'Authorization' : `Bearer ${token}`
@@ -106,6 +114,7 @@ export default function ProfilePage() {
             }
             const draftData = await drafts.json();
             setUserDrafts(draftData.posts);
+            setLoadingDrafts(false);
 
             const userTopPosts = await fetch(`http://localhost:9000/post-reply-service/posts/${id}/top`, {
                 headers: {
@@ -114,6 +123,7 @@ export default function ProfilePage() {
             });
             const topPostsData = await userTopPosts.json();
             setTopPosts(topPostsData.posts);
+            setLoadingTopPosts(false);
 
             const viewHistory = await fetch(`http://localhost:9000/post-composite-service/histories`, {
                 headers: {
@@ -121,9 +131,14 @@ export default function ProfilePage() {
                 } 
             });
             const viewHistoryData = await viewHistory.json();
-            setUserViewHistory(viewHistoryData); 
+            console.log(viewHistoryData);
+            setUserViewHistory(viewHistoryData);
+            setLoadingHistory(false);
         } catch (error) {
             console.error('Error fetching user data:', error);
+            setLoadingDrafts(false);
+            setLoadingHistory(false);
+            setLoadingTopPosts(false);
         }
     };
 
@@ -197,7 +212,9 @@ export default function ProfilePage() {
                         <h2>Top 3 posts</h2>
                         <div style={{ height: "200px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
                         
-                        {topPosts.length === 0 ? (
+                        {loadingTopPosts ? (
+                            <p style={{ margin: "1em" }}>Loading Top 3 posts...</p>) 
+                        : topPosts.length === 0 ? (
                             <p style={{margin: "1em"}}>You have no posts</p>
                         ) : ( 
                         <table style={tableStyle}>
@@ -231,9 +248,11 @@ export default function ProfilePage() {
                     <div>
                         <h2>Drafts</h2>
                         <div style={{ height: "300px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
-                        {userDrafts.length === 0 ? (
-                            <p style={{margin: "1em"}}>You have no drafts</p>
-                        ) : (
+                        {loadingDrafts ? (
+                            <p style={{ margin: "1em" }}>Loading drafts...</p>) 
+                        : userDrafts.length === 0 ? (
+                            <p style={{margin: "1em"}}>You have no draft</p>
+                        ) : ( 
                         <table style={tableStyle}>
                             <thead>
                             <tr>
@@ -271,7 +290,9 @@ export default function ProfilePage() {
                 <div style={{flexGrow: 1}}>
                     <h2>View History</h2>
                         <div style={{ marginLeft: "30px", height: "580px", overflow: "auto", border: "1px solid #ccc", background: "#f9f9f9" }}>
-                        {topPosts.length === 0 ? (
+                        {loadingHistory ? (
+                            <p style={{ margin: "1em" }}>Loading view history...</p>) 
+                        : userViewHistory.length === 0 ? (
                             <p style={{margin: "1em"}}>You have no history</p>
                         ) : ( 
                         <table style={tableStyle}>
