@@ -105,12 +105,11 @@ export default function PostDetailPage() {
               body: JSON.stringify(replyData),
             }
           );
-    
+          const responseData = await response.json();
           if (response.ok) {
             window.location.reload();
-          }else if (response.status === 403) {
-            alert("Unanthorized operation! Check your user status first.");
-            console.error("Error creating new reply: Forbidden");
+          }else{
+            alert(responseData.message);
           } 
         } catch (error) {
           alert("Error happend, please try again later");
@@ -159,7 +158,7 @@ export default function PostDetailPage() {
 
     const handleSubReplySubmit = async (e, replyIndex) => {
         e.preventDefault();
-        if (!replyContent.trim()) {
+        if (!subReplies[replyIndex].trim()) {
             alert("Reply content cannot be empty!");
             return;
         }
@@ -176,13 +175,12 @@ export default function PostDetailPage() {
               body: JSON.stringify(subReplyData),
             }
           );
-    
+          const responseData = await response.json();
           if (response.ok) {
             window.location.reload();
-          }else if (response.status === 403) {
-            alert("Unanthorized operation! Check your user status first.");
-            console.error("Error creating new reply: Forbidden");
-          } 
+          }else{
+            alert(responseData.message);
+          }
         } catch (error) {
           alert("Error happend, please try again later");
           console.error("Error creating new reply:", error);
