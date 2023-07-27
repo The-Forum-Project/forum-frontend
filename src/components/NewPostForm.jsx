@@ -86,7 +86,10 @@ export default function NewPostForm() {
             console.log("Unauthorized operation");
             return;
         }else if(response.ok) {
-            alert("Create a new post!");
+            if(status === "published")
+                alert("Create a new post!");
+            else
+                alert("Save as a draft!");
             window.location.reload();
         }
     } catch (error) {
