@@ -53,6 +53,11 @@ const tableStyle = {
     marginTop: '10px'
 };
 
+const imageStyle = {
+    maxWidth: '410',
+    maxHeight: '560'
+}
+
 export default function ProfilePage() {
     const params = useParams();
     const navigate = useNavigate();
@@ -154,7 +159,7 @@ export default function ProfilePage() {
                 <div>
                     <h1>{`${userData.firstName} ${userData.lastName}`}</h1>
                     <p>Registration date: {formatDate(userData.registrationDate)}</p>
-                    <img src={userData.imageURL} alt="User profile" />
+                    <img src={userData.imageURL} alt="User profile" style={{ maxWidth: '410px', maxHeight: '560px', borderRadius: '50%'}}/>
                 </div>
             ) : (
                 <p>Loading...</p>
