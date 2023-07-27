@@ -2,6 +2,18 @@ import React, { useState, useEffect } from "react";
 import FileSelection from "./FileSelection";
 import axios from "axios";
 
+const buttonStyles = {
+    margin: "5px",
+    padding: "10px 15px",
+    fontWeight: "bold",
+    borderRadius: "4px",
+    backgroundColor: "#1976d2", // Darker blue background color
+    color: "white", // White text color
+    border: "none", // No border
+    cursor: "pointer", // Show pointer cursor on hover
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a subtle box shadow
+};
+
 export default function ModifyPostForm({ postId, postStatus, onClose, isArchived }) {
   // State variables for the form fields
   const [title, setTitle] = useState("");
@@ -188,33 +200,33 @@ const handleArchiveToggle = async () => {
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
 
-      {postStatus === "banned" && (<button type="button" onClick={handleCancel}>Cancel</button>)}
+      {postStatus === "banned" && (<button style = {buttonStyles} type="button" onClick={handleCancel}>Cancel</button>)}
       
       {postStatus === "hidden" && (
         <>
-        <button type="button" onClick={() => handleUpdate("published")}>Published</button>
-        <button type="submit">Save Changes</button>
-        <button type="button" onClick={handleCancel}>Cancel</button> 
+        <button style={buttonStyles} type="button" onClick={() => handleUpdate("published")}>Published</button>
+        <button style={buttonStyles} type="submit">Save Changes</button>
+        <button style={buttonStyles} type="button" onClick={handleCancel}>Cancel</button>
         </>
       )} 
       
       {postStatus === "unpublished" &&
         <>
-        <button type="button" onClick={() => handleUpdate("published")}>Publish</button>
-        <button type="submit">Save Changes</button>
-        <button type="button" onClick={handleCancel}>Cancel</button>
+        <button style={buttonStyles} type="button" onClick={() => handleUpdate("published")}>Publish</button>
+        <button style={buttonStyles} type="submit">Save Changes</button>
+        <button style={buttonStyles} type="button" onClick={handleCancel}>Cancel</button>
         </>
       }
 
       {postStatus === "published" &&
         <>
-            <button type="button" onClick={() => handleUpdate("deleted")}>delete</button>
-            <button type="button" onClick={() => handleUpdate("hidden")}>hide</button> 
-            <button type="submit">Save Changes</button>
-            <button type="button" onClick={handleArchiveToggle}>
+            <button style={buttonStyles} type="button" onClick={() => handleUpdate("deleted")}>delete</button>
+            <button style={buttonStyles} type="button" onClick={() => handleUpdate("hidden")}>hide</button>
+            <button style={buttonStyles} type="submit">Save Changes</button>
+            <button style={buttonStyles} type="button" onClick={handleArchiveToggle}>
                 {isArchived ? "Unarchive" : "Archive"}
             </button>
-            <button type="button" onClick={handleCancel}>Cancel</button>
+            <button style={buttonStyles} type="button" onClick={handleCancel}>Cancel</button>
         </>}
       </div>
     </form>

@@ -1,5 +1,15 @@
 import React, {useEffect, useState} from "react";
 
+const boxStyle = {
+    border: '1px solid #ccc',
+    borderRadius: '10px',
+    padding: '20px',
+    margin: '10px',
+    width: 'auto',
+    background: '#fff',
+    boxShadow: '2px 2px 15px -1px rgba(0,0,0,0.15)'
+};
+
 export default function UMPage() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -91,66 +101,69 @@ export default function UMPage() {
         if (authority === "admin" || authority === "super") {
             return (
                 <div style={{ maxWidth: "800px", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
-                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                        <thead>
-                        <tr style={{ backgroundColor: "#f5f5f5", textAlign: "center" }}>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>User Id</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Full Name</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date Joined</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Type</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Activation</th>
-                            {authority === "super" && (
-                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Promotion</th>
-                            )}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {users.map(user => (
-                            <tr key={user.userId} style={{ borderBottom: "1px solid #ddd" }}>
-                                <td style={{ padding: "10px" }}>{user.userId}</td>
-                                <td style={{ padding: "10px" }}>{user.firstName} {user.lastName}</td>
-                                <td style={{ padding: "10px" }}>{user.email}</td>
-                                <td style={{ padding: "10px" }}>{new Date(user.registrationDate).toLocaleString()}</td>
-                                <td style={{ padding: "10px" }}>{typeName(user.type)}</td>
-                                <td style={{ padding: "10px" }}>
-                                    {user.type !== 0 && user.type !== 1 && (
-                                        <button
-                                            onClick={() => handleActiveStatusChange(user.userId, user.active)}
-                                            style={{
-                                                padding: "5px 10px",
-                                                borderRadius: "5px",
-                                                cursor: "pointer",
-                                                border: "none",
-                                                backgroundColor: user.active ? "#ff0000" : "#007BFF",
-                                                color: "white"
-                                            }}
-                                        >
-                                            {user.active ? 'BAN' : 'ACTIVATE'}
-                                        </button>
-                                    )}
-                                </td>
-                                <td style={{ padding: "10px" }}>
-                                    {user.type === 2 && authority === 'super' && (
-                                        <button
-                                            onClick={() => promoteUser(user.userId)}
-                                            style={{
-                                                padding: "5px 10px",
-                                                borderRadius: "5px",
-                                                cursor: "pointer",
-                                                border: "none",
-                                                backgroundColor:"#007BFF",
-                                                color: "white"
-                                            }}
-                                        >
-                                            PROMOTE
-                                        </button>
-                                    )}
-                                </td>
+                    <div style={boxStyle}>
+                        <h1 style={{ textAlign: "center", color: "#444" }}>User Management</h1>
+                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                            <thead>
+                            <tr style={{ backgroundColor: "#f5f5f5", textAlign: "center" }}>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>User Id</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Full Name</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date Joined</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Type</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Activation</th>
+                                {authority === "super" && (
+                                    <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Promotion</th>
+                                )}
                             </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {users.map(user => (
+                                <tr key={user.userId} style={{ borderBottom: "1px solid #ddd" }}>
+                                    <td style={{ padding: "10px" }}>{user.userId}</td>
+                                    <td style={{ padding: "10px" }}>{user.firstName} {user.lastName}</td>
+                                    <td style={{ padding: "10px" }}>{user.email}</td>
+                                    <td style={{ padding: "10px" }}>{new Date(user.registrationDate).toLocaleString()}</td>
+                                    <td style={{ padding: "10px" }}>{typeName(user.type)}</td>
+                                    <td style={{ padding: "10px" }}>
+                                        {user.type !== 0 && user.type !== 1 && (
+                                            <button
+                                                onClick={() => handleActiveStatusChange(user.userId, user.active)}
+                                                style={{
+                                                    padding: "5px 10px",
+                                                    borderRadius: "5px",
+                                                    cursor: "pointer",
+                                                    border: "none",
+                                                    backgroundColor: user.active ? "#ff0000" : "#007BFF",
+                                                    color: "white"
+                                                }}
+                                            >
+                                                {user.active ? 'BAN' : 'ACTIVATE'}
+                                            </button>
+                                        )}
+                                    </td>
+                                    <td style={{ padding: "10px" }}>
+                                        {user.type === 2 && authority === 'super' && (
+                                            <button
+                                                onClick={() => promoteUser(user.userId)}
+                                                style={{
+                                                    padding: "5px 10px",
+                                                    borderRadius: "5px",
+                                                    cursor: "pointer",
+                                                    border: "none",
+                                                    backgroundColor:"#007BFF",
+                                                    color: "white"
+                                                }}
+                                            >
+                                                PROMOTE
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             );

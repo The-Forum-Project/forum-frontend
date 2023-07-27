@@ -1,6 +1,16 @@
 import React, {useEffect, useState} from "react";
 import { useLocation } from "react-router-dom";
 
+const boxStyle = {
+    border: '1px solid #ccc',
+    borderRadius: '10px',
+    padding: '20px',
+    margin: '10px',
+    width: 'auto',
+    background: '#fff',
+    boxShadow: '2px 2px 15px -1px rgba(0,0,0,0.15)'
+};
+
 export default function MMPage() {
     const location = useLocation();
     const [messages, setMessages] = useState([]);
@@ -68,34 +78,37 @@ export default function MMPage() {
         if (authority === "admin" || authority === "super") {
             return (
                 <div style={{ maxWidth: "800px", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
-                    <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                        <thead>
-                        <tr style={{ backgroundColor: "#f5f5f5", textAlign: "center" }}>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Subject</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email Address</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Message</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Status</th>
-                            <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {messages.map(message => (
-                            <tr key={message.messageId} style={{ borderBottom: "1px solid #ddd" }}>
-                                <td style={{ padding: "10px" }}>{new Date(message.dateCreated).toLocaleString()}</td>
-                                <td style={{ padding: "10px" }}>{message.subject}</td>
-                                <td style={{ padding: "10px" }}>{message.email}</td>
-                                <td style={{ padding: "10px" }}>{message.message}</td>
-                                <td style={{ padding: "10px" }}>{message.status === 0 ? 'Open' : 'Closed'}</td>
-                                <td style={{ padding: "10px" }}>
-                                    <button onClick={() => handleStatusChange(message.messageId, message.status)} style={{ padding: "5px 10px", borderRadius: "5px", cursor: "pointer", border: "none", backgroundColor: message.status === 0 ? "#ff0000" : "#007BFF", color: "white" }}>
-                                        {message.status === 0 ? 'Close' : 'Open'}
-                                    </button>
-                                </td>
+                    <div style={boxStyle}>
+                        <h1 style={{ textAlign: "center", color: "#444" }}>Messages Management</h1>
+                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                            <thead>
+                            <tr style={{ backgroundColor: "#f5f5f5", textAlign: "center" }}>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Date</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Subject</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email Address</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Message</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Status</th>
+                                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Actions</th>
                             </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {messages.map(message => (
+                                <tr key={message.messageId} style={{ borderBottom: "1px solid #ddd" }}>
+                                    <td style={{ padding: "10px" }}>{new Date(message.dateCreated).toLocaleString()}</td>
+                                    <td style={{ padding: "10px" }}>{message.subject}</td>
+                                    <td style={{ padding: "10px" }}>{message.email}</td>
+                                    <td style={{ padding: "10px" }}>{message.message}</td>
+                                    <td style={{ padding: "10px" }}>{message.status === 0 ? 'Open' : 'Closed'}</td>
+                                    <td style={{ padding: "10px" }}>
+                                        <button onClick={() => handleStatusChange(message.messageId, message.status)} style={{ padding: "5px 10px", borderRadius: "5px", cursor: "pointer", border: "none", backgroundColor: message.status === 0 ? "#ff0000" : "#007BFF", color: "white" }}>
+                                            {message.status === 0 ? 'Close' : 'Open'}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             );
